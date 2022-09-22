@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+</body>
+<script>
+  setInterval(() => {
+    navigator.geolocation.getCurrentPosition(position => {
+      let element = document.createElement("div");
+      element.textContent = `${new Date().toLocaleTimeString()}: ${position.coords.latitude}, ${position.coords.longitude}`;
+      document.body.appendChild(element);
+    });
+  }, 5000);
+
+</script>
+</html>
