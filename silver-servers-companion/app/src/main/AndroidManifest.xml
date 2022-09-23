@@ -6,7 +6,7 @@
         android:theme="@style/Theme.SilverServersCompanion"
         tools:targetApi="32">
         <activity
-            android:name=".MainActivity"
+            android:name="com.silverservers.app.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
