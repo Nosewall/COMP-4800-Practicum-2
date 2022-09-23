@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.silverserverscompanion'
+    namespace 'com.silverservers.companion'
     compileSdk 32
 
     defaultConfig {
-        applicationId "com.example.silverserverscompanion"
+        applicationId "com.silverservers.companion"
         minSdk 28
         targetSdk 32
         versionCode 1
