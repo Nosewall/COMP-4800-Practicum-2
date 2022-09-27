@@ -1,14 +1,22 @@
 package com.silverservers.service;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import com.silverservers.app.App;
 import com.silverservers.companion.R;
+
+import java.util.concurrent.TimeUnit;
 
 public class LocationService extends Service {
     public static final String DISPLAY_NAME = "Location Service";
@@ -24,10 +32,14 @@ public class LocationService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        LocationWorker worker = new LocationWorker();
+        worker.start();
+
         start(
             App.getNextServiceId(),
             intent.getStringExtra(PARAMETER_CHANNEL_ID)
         );
+
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -37,6 +49,7 @@ public class LocationService extends Service {
             .setSmallIcon(R.drawable.ic_location_service)
             .setContentTitle(DISPLAY_NAME)
             .setContentText(DESCRIPTION)
+            .setCategory(Notification.CATEGORY_SERVICE)
             .build());
     }
 }

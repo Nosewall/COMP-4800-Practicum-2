@@ -24,7 +24,7 @@ public class App extends Application {
         super.onCreate();
         notificationManager = getSystemService(NotificationManager.class);
         Intent locationService = createLocationService();
-        startService(locationService);
+        startForegroundService(locationService);
     }
 
     private Intent createLocationService() {
