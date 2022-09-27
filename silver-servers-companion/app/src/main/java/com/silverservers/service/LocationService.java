@@ -1,22 +1,20 @@
 package com.silverservers.service;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.IBinder;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
-import androidx.work.ExistingPeriodicWorkPolicy;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.silverservers.app.App;
 import com.silverservers.companion.R;
-
-import java.util.concurrent.TimeUnit;
 
 public class LocationService extends Service {
     public static final String DISPLAY_NAME = "Location Service";
@@ -32,7 +30,9 @@ public class LocationService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        LocationWorker worker = new LocationWorker();
+        FusedLocationProviderClient locationProvider = LocationServices.getFusedLocationProviderClient(this);
+
+        LocationWorker worker = new LocationWorker(locationProvider);
         worker.start();
 
         start(
