@@ -20,6 +20,7 @@
             </intent-filter>
         </activity>
         <!-- Services -->
-        <service android:name="com.silverservers.service.LocationService"/>
+        <service android:name="com.silverservers.service.location.LocationService"/>
+        <receiver android:name="com.silverservers.service.location.GeofencingReceiver"/>
     </application>
 </manifest>

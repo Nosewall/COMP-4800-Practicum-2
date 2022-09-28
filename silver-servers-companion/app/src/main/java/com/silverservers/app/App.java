@@ -5,38 +5,37 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
 
-import com.silverservers.service.LocationService;
+import com.silverservers.service.location.LocationService;
+import com.silverservers.service.location.LocationServiceIntent;
 
 public class App extends Application {
-    private NotificationManager notificationManager;
+    private static int currentServiceId = 1;
+    private static int getNextServiceId() {
+        return currentServiceId++;
+    }
 
     public static String generateUniqueId() {
         return java.util.UUID.randomUUID().toString();
     }
 
-    private static int currentServiceId = 1;
-    public static int getNextServiceId() {
-        return currentServiceId++;
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
-        notificationManager = getSystemService(NotificationManager.class);
         Intent locationService = createLocationService();
         startForegroundService(locationService);
     }
 
-    private Intent createLocationService() {
+    private LocationServiceIntent createLocationService() {
         NotificationChannel channel = createNotificationChannel(
-            LocationService.DISPLAY_NAME,
+            LocationService.LABEL,
             LocationService.DESCRIPTION
         );
 
-        Intent intent = new Intent(this, LocationService.class);
-        intent.putExtra(
-            LocationService.PARAMETER_CHANNEL_ID,
-            channel.getId()
+        LocationServiceIntent intent = new LocationServiceIntent(
+            this,
+            getNextServiceId(),
+            channel.getId(),
+            LocationService.Mode.Location
         );
 
         return intent;
@@ -49,7 +48,7 @@ public class App extends Application {
             NotificationManager.IMPORTANCE_DEFAULT
         );
         channel.setDescription(description);
-        notificationManager.createNotificationChannel(channel);
+        getSystemService(NotificationManager.class).createNotificationChannel(channel);
         return channel;
     }
 }
