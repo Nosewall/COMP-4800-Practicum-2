@@ -1,6 +1,7 @@
 package com.silverservers.service.location;
 
 import android.annotation.SuppressLint;
+import android.location.Location;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.Priority;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public class CoordinateWorker implements Runnable {
     private static final int THREAD_POOL_SIZE = 1;
@@ -19,11 +21,14 @@ public class CoordinateWorker implements Runnable {
     private static final TimeUnit COUNTER = TimeUnit.SECONDS;
 
     private final FusedLocationProviderClient client;
+    private final Consumer<Location> onUpdate;
+
     private final CancellationTokenSource cancelSource = new CancellationTokenSource();
 
-    public CoordinateWorker(FusedLocationProviderClient client) {
+    public CoordinateWorker(FusedLocationProviderClient client, Consumer<Location> onUpdate) {
         super();
         this.client = client;
+        this.onUpdate = onUpdate;
     }
 
     @Override
@@ -45,17 +50,6 @@ public class CoordinateWorker implements Runnable {
         client.getCurrentLocation(
             Priority.PRIORITY_HIGH_ACCURACY,
             cancelSource.getToken()
-        ).addOnSuccessListener(location -> {
-            if (location == null) {
-                System.out.println("Coordinates not found");
-            } else {
-                System.out.println(
-                    ""
-                    + location.getLatitude()
-                    + ", "
-                    + location.getLongitude()
-                );
-            }
-        });
+        ).addOnSuccessListener(onUpdate::accept);
     }
 }
