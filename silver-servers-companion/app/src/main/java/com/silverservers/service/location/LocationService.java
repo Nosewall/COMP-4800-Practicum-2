@@ -1,7 +1,5 @@
 package com.silverservers.service.location;
 
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.location.Location;
@@ -14,8 +12,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.LocationServices;
 import com.silverservers.companion.R;
-
-import java.util.function.Consumer;
+import com.silverservers.service.ServiceNotifier;
 
 public class LocationService extends Service {
     public enum Mode {
@@ -23,12 +20,12 @@ public class LocationService extends Service {
         Geofencing,
     }
 
-    public static final String LABEL = "Location Service";
-    public static final String DESCRIPTION = "Tracking location in background";
+    private static final String NAME = "Location Service";
+    private static final String DESCRIPTION = "Tracking location in background";
+    private static final int ICON = R.drawable.ic_location_service;
 
-    private int serviceId;
-    private String channelId;
     private Mode mode;
+    private ServiceNotifier notifier;
 
     @Nullable
     @Override
@@ -37,14 +34,14 @@ public class LocationService extends Service {
     }
 
     private void setParameters(Intent intent) {
-        serviceId = LocationServiceIntent.extractServiceId(intent);
-        channelId = LocationServiceIntent.extractChannelId(intent);
         mode = LocationServiceIntent.extractMode(intent);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         setParameters(intent);
+
+        notifier = new ServiceNotifier(this, NAME, DESCRIPTION);
 
         Runnable worker;
         switch (mode) {
@@ -63,8 +60,8 @@ public class LocationService extends Service {
         worker.run();
 
         startForeground(
-            serviceId,
-            buildNotification(null)
+            notifier.FOREGROUND_NOTIFICATION_ID,
+            notifier.buildNotification(this::setNotificationDefaults)
         );
 
         return super.onStartCommand(intent, flags, startId);
@@ -78,32 +75,19 @@ public class LocationService extends Service {
 
         System.out.println(
             "Receive coordinates: "
-                + coordinateString
+            + coordinateString
         );
 
-        updateNotification(builder -> builder.setContentText(
-            "Latest coordinates: "
+        notifier.updateNotification(notifier.FOREGROUND_NOTIFICATION_ID, builder -> {
+            setNotificationDefaults(builder);
+            builder.setContentText(
+                "Latest coordinates: "
                 + coordinateString
-        ));
+            );
+        });
     }
 
-    private Notification buildNotification(@Nullable Consumer<NotificationCompat.Builder> build) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
-            .setOngoing(true)
-            .setSmallIcon(R.drawable.ic_location_service)
-            .setCategory(Notification.CATEGORY_SERVICE)
-            .setContentTitle(LABEL)
-            .setContentText(DESCRIPTION);
-
-        if (build != null) { build.accept(builder); }
-
-        return builder.build();
-    }
-
-    private void updateNotification(Consumer<NotificationCompat.Builder> build) {
-        getSystemService(NotificationManager.class).notify(
-            serviceId,
-            buildNotification(build)
-        );
+    private void setNotificationDefaults(NotificationCompat.Builder builder) {
+        builder.setSmallIcon(ICON);
     }
 }
