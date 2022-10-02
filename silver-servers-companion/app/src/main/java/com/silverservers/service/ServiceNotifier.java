@@ -13,7 +13,7 @@ import com.silverservers.app.App;
 import java.util.function.Consumer;
 
 public class ServiceNotifier {
-    public final int FOREGROUND_NOTIFICATION_ID = 1;
+    public static final int FOREGROUND_NOTIFICATION_ID = 1;
 
     private final Service service;
     private final NotificationManager manager;

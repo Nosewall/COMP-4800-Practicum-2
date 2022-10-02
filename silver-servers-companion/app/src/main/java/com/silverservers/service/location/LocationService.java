@@ -60,7 +60,7 @@ public class LocationService extends Service {
         worker.run();
 
         startForeground(
-            notifier.FOREGROUND_NOTIFICATION_ID,
+            ServiceNotifier.FOREGROUND_NOTIFICATION_ID,
             notifier.buildNotification(this::setNotificationDefaults)
         );
 
@@ -78,7 +78,7 @@ public class LocationService extends Service {
             + coordinateString
         );
 
-        notifier.updateNotification(notifier.FOREGROUND_NOTIFICATION_ID, builder -> {
+        notifier.updateNotification(ServiceNotifier.FOREGROUND_NOTIFICATION_ID, builder -> {
             setNotificationDefaults(builder);
             builder.setContentText(
                 "Latest coordinates: "
