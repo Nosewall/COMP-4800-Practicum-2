@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context="com.silverservers.app.DashboardActivity"
+    tools:layout_editor_absoluteX="-2dp"
+    tools:layout_editor_absoluteY="32dp">
+
+    <TextView
+        android:id="@+id/textView_dashboard6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="36dp"
+        android:text="Geofence Status"
+        android:textColor="@color/foreground"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/textView_dashboard7"
+        app:layout_constraintStart_toStartOf="@+id/textView_dashboard7" />
+
+    <TextView
+        android:id="@+id/textView_dashboard7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="92dp"
+        android:text="Inside SS Fence"
+        android:textColor="@color/primary"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_dashboard5" />
+
+    <TextView
+        android:id="@+id/textView_dashboard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="8dp"
+        android:text="Logged in as PersonA"
+        android:textColor="@color/foreground"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/textView_dashboard3"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView_dashboard2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:text="Session Status:"
+        android:textColor="@color/foreground"
+        android:textSize="24sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textView_dashboard3"
+        app:layout_constraintEnd_toStartOf="@+id/textView_dashboard3"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView_dashboard4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        android:layout_marginEnd="8dp"
+        android:text="Last Updated Location"
+        android:textColor="@color/foreground"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/textView_dashboard3"
+        app:layout_constraintTop_toBottomOf="@+id/textView_dashboard2" />
+
+    <TextView
+        android:id="@+id/textView_dashboard5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="1.2345, 5.6789"
+        android:textColor="@color/primary"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="@+id/textView_dashboard4"
+        app:layout_constraintTop_toBottomOf="@+id/textView_dashboard4" />
+
+    <TextView
+        android:id="@+id/textView_dashboard3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:layout_marginEnd="23dp"
+        android:text="Active"
+        android:textColor="@color/primary"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView_dashboard2"
+        app:layout_constraintTop_toBottomOf="@+id/textView_dashboard" />
+</androidx.constraintlayout.widget.ConstraintLayout>
