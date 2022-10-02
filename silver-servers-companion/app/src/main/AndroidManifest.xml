@@ -7,7 +7,7 @@
         android:theme="@style/Theme.SilverServersCompanion"
         tools:targetApi="32">
         <activity
-            android:name=".DashboardActivity"
+            android:name="com.silverservers.app.DashboardActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
