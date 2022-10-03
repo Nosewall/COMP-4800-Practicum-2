@@ -1,14 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
+    android:gravity="center"
+    android:orientation="vertical"
     tools:context="com.silverservers.app.MainActivity">
 
     <TextView
+        android:id="@+id/textView_main_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Hello World!"
-        android:textSize="64sp" />
-</FrameLayout>
+        android:text="@string/app_title"
+        android:textColor="@color/foreground"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/textView_main_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="@string/log_in"
+        android:textColor="@color/foreground"
+        android:textSize="34sp" />
+
+    <Button
+        android:id="@+id/button_main_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:text="@string/password" />
+
+    <Button
+        android:id="@+id/button_main_oauth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/oauth" />
+
+</LinearLayout>

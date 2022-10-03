@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="foreground">#FFFFFF</color>
-    <color name="background">#000000</color>
-    <color name="primary">#123456</color>
-    <color name="secondary">#FEDCBA</color>
+    <color name="foreground">#EEEEEE</color>
+    <color name="background">#0F2542</color>
+    <color name="primary">#119A49</color>
+    <color name="secondary">#18375F</color>
+
 </resources>
