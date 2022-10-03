@@ -68,6 +68,11 @@ public class LocationService extends Service {
     }
 
     private void onReceiveCoordinates(Location location) {
+        if (location == null) {
+            System.out.println("Could not receive new coordinates");
+            return;
+        }
+
         String coordinateString = ""
             + location.getLatitude()
             + ", "

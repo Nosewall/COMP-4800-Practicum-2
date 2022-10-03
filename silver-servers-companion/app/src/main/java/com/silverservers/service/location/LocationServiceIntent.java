@@ -10,7 +10,7 @@ public class LocationServiceIntent extends Intent {
 
     public LocationServiceIntent(Context context, LocationService.Mode mode) {
         super(context, LocationService.class);
-        putExtra(PARAMETER_MODE, mode);
+        putExtra(PARAMETER_MODE, mode.ordinal());
     }
 
     public static LocationService.Mode extractMode(Intent intent) {
