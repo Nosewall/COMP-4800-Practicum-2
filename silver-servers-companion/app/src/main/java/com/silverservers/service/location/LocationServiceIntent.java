@@ -13,6 +13,9 @@ public class LocationServiceIntent extends Intent {
         putExtra(PARAMETER_MODE, mode.ordinal());
     }
 
+    /**
+     * Gets the `mode` parameter from a low-level intent.
+     */
     public static LocationService.Mode extractMode(Intent intent) {
         return LocationService.Mode.values()[
             intent.getIntExtra(LocationServiceIntent.PARAMETER_MODE, 0)

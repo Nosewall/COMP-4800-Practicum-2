@@ -37,12 +37,22 @@ public class LocationService extends Service {
         mode = LocationServiceIntent.extractMode(intent);
     }
 
+    /**
+     * Called when the service is started.
+     *
+     * Sets the parameters from the given intent.
+     * Initializes a service worker based on `mode` intent parameter.
+     * Runs the service worker.
+     * Registers the service as a foreground service with a base notification.
+     */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         setParameters(intent);
 
         notifier = new ServiceNotifier(this, NAME, DESCRIPTION);
 
+        // May create two services later, or implement this in a different way,
+        // However this should suffice for rudimentary testing.
         Runnable worker;
         switch (mode) {
             case Geofencing: {
@@ -67,6 +77,10 @@ public class LocationService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    /**
+     * Prints location coordinates to console and updates the service
+     * notification with new coordinates.
+     */
     private void onReceiveCoordinates(Location location) {
         if (location == null) {
             System.out.println("Could not receive new coordinates");
@@ -92,6 +106,12 @@ public class LocationService extends Service {
         });
     }
 
+    /**
+     * Sets notification builder to default values
+     * for all notifications for this service.
+     *
+     * Currently, just the icon.
+     */
     private void setNotificationDefaults(NotificationCompat.Builder builder) {
         builder.setSmallIcon(ICON);
     }

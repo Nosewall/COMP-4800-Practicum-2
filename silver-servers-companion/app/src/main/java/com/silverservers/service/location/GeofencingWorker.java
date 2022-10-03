@@ -18,7 +18,5 @@ public class GeofencingWorker extends Thread {
 
     @SuppressLint("MissingPermission")
     @Override
-    public final void run() {
-        System.out.println("Geofencing not implemented");
-    }
+    public final void run() { System.out.println("Geofencing not implemented"); }
 }

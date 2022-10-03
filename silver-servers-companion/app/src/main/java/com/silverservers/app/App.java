@@ -11,6 +11,9 @@ public class App extends Application {
         return java.util.UUID.randomUUID().toString();
     }
 
+    /**
+     * Launches app initialization tasks.
+     */
     @Override
     public void onCreate() {
         super.onCreate();
@@ -18,13 +21,14 @@ public class App extends Application {
         startForegroundService(locationService);
     }
 
+    /**
+     * Launches the location background service
+     */
     private LocationServiceIntent createLocationService() {
-        LocationServiceIntent intent = new LocationServiceIntent(
+        return new LocationServiceIntent(
             this,
             LocationService.Mode.Location
         );
-
-        return intent;
     }
 
 

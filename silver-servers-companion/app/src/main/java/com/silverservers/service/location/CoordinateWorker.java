@@ -31,6 +31,11 @@ public class CoordinateWorker implements Runnable {
         this.onUpdate = onUpdate;
     }
 
+    /**
+     * Runs the worker.
+     *
+     * Runs `routine()` periodically.
+     */
     @Override
     public void run() {
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(THREAD_POOL_SIZE);
@@ -42,11 +47,16 @@ public class CoordinateWorker implements Runnable {
         );
     }
 
+    /**
+     * Gets the users current location and send the result
+     * to the `onUpdate` handler.
+     */
     @SuppressLint("MissingPermission")
     private void routine() {
         System.out.println("Request coordinates: " + LocalDateTime.now().toLocalTime());
 
         // TODO: Request permissions
+        // Probably in base app rather that the service.
         client.getCurrentLocation(
             Priority.PRIORITY_HIGH_ACCURACY,
             cancelSource.getToken()

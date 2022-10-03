@@ -26,6 +26,9 @@ public class ServiceNotifier {
         this.channel = createChannel(name, description);
     }
 
+    /**
+     * Creates an underlying notification channel to create and update notifications.
+     */
     public NotificationChannel createChannel(String name, String description) {
         NotificationChannel channel = new NotificationChannel(
             App.generateId(),
@@ -37,6 +40,9 @@ public class ServiceNotifier {
         return channel;
     }
 
+    /**
+     * Adds a new notification to the channel.
+     */
     public int addNotification(@Nullable Consumer<NotificationCompat.Builder> build) {
         int id = currentId++;
         manager.notify(
@@ -46,6 +52,9 @@ public class ServiceNotifier {
         return id;
     }
 
+    /**
+     * Updates an existing notification in the channel with new content.
+     */
     public void updateNotification(int serviceId, @Nullable Consumer<NotificationCompat.Builder> build) {
         manager.notify(
             serviceId,
@@ -53,6 +62,12 @@ public class ServiceNotifier {
         );
     }
 
+    /**
+     * Builds a notification using a default builder.
+     *
+     * The build function can be used to inject functionalities
+     * into notification before building it.
+     */
     public Notification buildNotification(@Nullable Consumer<NotificationCompat.Builder> build) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(service, channel.getId())
             .setOngoing(true)
