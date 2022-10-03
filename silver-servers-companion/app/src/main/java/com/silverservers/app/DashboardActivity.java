@@ -6,14 +6,11 @@ import android.os.Bundle;
 
 import com.silverservers.companion.R;
 
-public class MainActivity extends AppCompatActivity {
+public class DashboardActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        // Transition to dashboard activity if user session still active
-        // Else stay/prompt for auth again
+        setContentView(R.layout.activity_dashboard);
     }
 }

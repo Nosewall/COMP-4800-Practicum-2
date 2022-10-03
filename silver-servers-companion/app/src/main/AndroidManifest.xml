@@ -12,6 +12,18 @@
         android:name="com.silverservers.app.App"
         tools:targetApi="32">
         <activity
+            android:name="com.silverservers.app.DashboardActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name="com.silverservers.app.OauthActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name="com.silverservers.app.PasswordActivity"
+            android:exported="false">
+        </activity>
+        <activity
             android:name="com.silverservers.app.MainActivity"
             android:exported="true">
             <intent-filter>
