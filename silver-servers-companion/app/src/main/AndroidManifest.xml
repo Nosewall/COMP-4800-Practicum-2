@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
+    <!-- Permissions -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- Application -->
     <application
         android:label="@string/app_name"
         android:theme="@style/Theme.SilverServersCompanion"
+        android:name="com.silverservers.app.App"
         tools:targetApi="32">
         <activity
             android:name="com.silverservers.app.DashboardActivity"
@@ -23,10 +28,11 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- Services -->
+        <service android:name="com.silverservers.service.location.LocationService"/>
+        <receiver android:name="com.silverservers.service.location.GeofencingReceiver"/>
     </application>
-
 </manifest>
