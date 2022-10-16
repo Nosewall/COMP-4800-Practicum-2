@@ -133,7 +133,7 @@ user_id {string}
 
 Id of the user that enters geofence
 
-geofence_id {string|number}
+geofence_id {string}
 
 Id of the geofence that is entered
 
@@ -162,7 +162,7 @@ user_id {string}
 
 Id of the user that enters geofence
 
-geofence_id {string|number}
+geofence_id {string}
 
 Id of the geofence that is entered
 

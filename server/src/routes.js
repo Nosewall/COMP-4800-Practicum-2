@@ -1,4 +1,4 @@
-import { promises as fs } from "fs";
+import { read } from './library/file.js';
 import { marked } from "marked";
 import express from "express";
 
@@ -19,7 +19,7 @@ function root(req, res) {
  * Gets the api markdown file as html.
  */
 async function api(req, res) {
-  const markdown = await fs.readFile(`./private/api.md`, "utf-8");
+  const markdown = await read(`./private/doc/api.md`);
   const html = await marked.parse(markdown);
   res.send(html);
 }
