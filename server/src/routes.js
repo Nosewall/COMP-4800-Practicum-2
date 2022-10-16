@@ -1,0 +1,25 @@
+import { promises as fs } from "fs";
+import { marked } from "marked";
+import express from "express";
+
+/**
+ * Registers route mappings to a given app.
+ */
+export default function register(app) {
+  app.use(express.static("./public"));
+  app.get("/", root);
+  app.get("/api", api);
+}
+
+function root(req, res) {
+  res.sendFile(`./public/index.html`);
+}
+
+/**
+ * Gets the api markdown file as html.
+ */
+async function api(req, res) {
+  const markdown = await fs.readFile(`./private/api.md`, "utf-8");
+  const html = await marked.parse(markdown);
+  res.send(html);
+}
