@@ -18,13 +18,20 @@ const getGeofencePoints = async () => readJson("./private/data/geofence_points.j
 /**
  * Entry point for all internal server logic.
  * Facilitating user sessions, geofence states, etc...
+ *
+ * Returns a server interface allowing external interactivity with server.
  */
 export default async function start() {
   console.log("Server logic");
+
   const geofencePoints = await getGeofencePoints();
   console.log("Loaded geofence points:", geofencePoints);
   const geofenceState = getInitialGeofenceState(geofencePoints);
   console.log("Initialized geofence state:", geofenceState);
+
+  return {
+    geofencePoints,
+  }
 }
 
 /**
@@ -33,7 +40,7 @@ export default async function start() {
  * Values contain any internal state of the geofence point
  *   |- Currently a list of users that are inside the geofence
  */
-function getInitialGeofenceState (geofencePoints) {
+function getInitialGeofenceState(geofencePoints) {
   return Object.fromEntries(geofencePoints.map(point => {
     return [ point.id, {
       users: []
