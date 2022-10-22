@@ -5,7 +5,6 @@ import androidx.annotation.NonNull;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.function.Consumer;
 
 public class Api {
     private static final String PROTOCOL_SEPARATOR = "://";
@@ -18,7 +17,7 @@ public class Api {
         @NonNull
         @Override
         public String toString() {
-            return name();
+            return name().toLowerCase();
         }
     }
 
@@ -48,8 +47,6 @@ public class Api {
         String path = basePath
             + File.separatorChar
             + requestPath;
-
-        System.out.println(path);
 
         URL url;
         try {

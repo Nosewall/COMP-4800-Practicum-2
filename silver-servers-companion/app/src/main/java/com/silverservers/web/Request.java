@@ -11,7 +11,7 @@ public class Request {
         this.url = url;
     }
 
-    public StringResponse getStringResponse() {
+    private HttpURLConnection openConnection() {
         HttpURLConnection connection;
 
         try {
@@ -22,6 +22,16 @@ public class Request {
             return null;
         }
 
+        return connection;
+    }
+
+    public StringResponse getStringResponse() {
+        HttpURLConnection connection = openConnection();
         return new StringResponse(connection);
+    }
+
+    public JsonResponse getJsonResponse() {
+        HttpURLConnection connection = openConnection();
+        return new JsonResponse(connection);
     }
 }

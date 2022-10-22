@@ -2,15 +2,8 @@ package com.silverservers.web;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
-import kotlin.text.Charsets;
 
 abstract class Response<T> {
     private final HttpURLConnection connection;

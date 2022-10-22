@@ -26,7 +26,7 @@ public class ServerApi extends Api {
         return new ServerApi(API_REMOTE_PROTOCOL, API_REMOTE_HOST);
     }
 
-    public Request requestGeofenceData() {
-        return request("geofence-data");
+    public JsonResponse requestGeofenceData() {
+        return request("geofence-data").getJsonResponse();
     }
 }

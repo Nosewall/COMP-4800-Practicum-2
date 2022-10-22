@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -20,6 +19,10 @@ public class StringResponse extends Response<String> {
 
     @Override
     protected String decodeStream(InputStream stream) {
+        return streamToString(stream);
+    }
+
+    static String streamToString(InputStream stream) {
         InputStreamReader reader = new InputStreamReader(stream, Charsets.UTF_8);
         List<Character> buffer = new ArrayList<>();
 
