@@ -11,6 +11,7 @@ import androidx.core.app.NotificationCompat;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.LocationServices;
+import com.silverservers.app.App;
 import com.silverservers.companion.R;
 import com.silverservers.web.Api;
 import com.silverservers.service.ServiceNotifier;
@@ -25,19 +26,8 @@ public class LocationService extends Service {
     private static final String DESCRIPTION = "Tracking location in background";
     private static final int ICON = R.drawable.ic_location_service;
 
-
-
     private Mode mode;
     private ServiceNotifier notifier;
-    private Api api = new Api(API_LOCAL);
-
-    private static final String API_TEST = "https://catfact.ninja";
-    private static final String API_TEST_PATH = "fact";
-
-    private static final String EMULATOR_LOCALHOST = "10.0.2.2";
-    private static final String API_LOCAL = "http://"
-        + EMULATOR_LOCALHOST
-        + ":8000";
 
     @Nullable
     @Override
@@ -117,7 +107,10 @@ public class LocationService extends Service {
             );
         });
 
-        api.request("geofence-data", System.out::println).start();
+        App.getServerApi()
+            .requestGeofenceData()
+            .getResponse()
+            .read(System.out::println);
     }
 
     /**

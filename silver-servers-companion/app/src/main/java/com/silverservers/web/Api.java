@@ -1,18 +1,50 @@
 package com.silverservers.web;
 
+import androidx.annotation.NonNull;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.function.Consumer;
 
 public class Api {
-    private final String basePath;
+    private static final String PROTOCOL_SEPARATOR = "://";
+    private static final String PORT_SEPARATOR = ":";
 
-    public Api(String basePath) {
-        this.basePath = basePath;
+    public enum Protocol {
+        HTTP,
+        HTTPS;
+
+        @NonNull
+        @Override
+        public String toString() {
+            return name();
+        }
     }
 
-    public Request request(String requestPath, Consumer<String> onResponse) {
+    private final String basePath;
+
+    Api(Protocol protocol, String host) {
+        this.basePath = assembleBasePath(protocol, host);
+    }
+
+    Api(Protocol protocol, String host, int port) {
+        this.basePath = assembleBasePath(protocol, host, port);
+    }
+
+    private String assembleBasePath(Protocol protocol, String host) {
+        return protocol.toString()
+            + PROTOCOL_SEPARATOR
+            + host;
+    }
+
+    private String assembleBasePath(Protocol protocol, String host, int port) {
+        return assembleBasePath(protocol, host)
+            + PORT_SEPARATOR
+            + port;
+    }
+
+    Request request(String requestPath) {
         String path = basePath
             + File.separatorChar
             + requestPath;
@@ -28,6 +60,6 @@ public class Api {
             return null;
         }
 
-        return new Request(url, onResponse);
+        return new Request(url);
     }
 }
