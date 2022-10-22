@@ -1,4 +1,4 @@
-package com.silverservers.http;
+package com.silverservers.web;
 
 import java.io.File;
 import java.net.MalformedURLException;

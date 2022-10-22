@@ -1,17 +1,16 @@
-package com.silverservers.http;
+package com.silverservers.web;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import kotlin.text.Charsets;
 
@@ -26,9 +25,9 @@ public class Request extends Thread {
 
     @Override
     public void run() {
-        HttpsURLConnection connection;
+        HttpURLConnection connection;
         try {
-            connection = (HttpsURLConnection)url.openConnection();
+            connection = (HttpURLConnection)url.openConnection();
         } catch (IOException exception) {
             System.err.println("Unable to connect to URL: " + url);
             exception.printStackTrace(System.err);

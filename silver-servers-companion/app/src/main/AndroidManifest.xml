@@ -11,6 +11,7 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.SilverServersCompanion"
         android:name="com.silverservers.app.App"
+        android:usesCleartextTraffic="true"
         tools:targetApi="32">
         <activity
             android:name="com.silverservers.app.DashboardActivity"
