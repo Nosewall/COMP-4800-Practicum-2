@@ -13,7 +13,6 @@ import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.LocationServices;
 import com.silverservers.app.App;
 import com.silverservers.companion.R;
-import com.silverservers.web.Api;
 import com.silverservers.service.ServiceNotifier;
 
 public class LocationService extends Service {
@@ -109,7 +108,7 @@ public class LocationService extends Service {
 
         App.getServerApi()
             .requestGeofenceData()
-            .getResponse()
+            .getStringResponse()
             .read(System.out::println);
     }
 

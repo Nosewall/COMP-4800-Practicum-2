@@ -1,14 +1,29 @@
 package com.silverservers.web;
 
-public class ServerApi extends Api {
-    public static final String EMULATOR_LOCALHOST = "10.0.2.2";
+import com.silverservers.app.App;
 
+public class ServerApi extends Api {
     private static final Api.Protocol API_LOCAL_PROTOCOL = Api.Protocol.HTTP;
-    private static final String API_LOCAL_HOST = EMULATOR_LOCALHOST;
+    private static final String API_LOCAL_HOST = App.EMULATOR_LOCALHOST;
     private static final int API_LOCAL_PORT = 8000;
 
-    public ServerApi() {
-        super(API_LOCAL_PROTOCOL, API_LOCAL_HOST, API_LOCAL_PORT);
+    private static final Api.Protocol API_REMOTE_PROTOCOL = Api.Protocol.HTTPS;
+    private static final String API_REMOTE_HOST = "ourHostedServerUrlInTheFuture.com";
+
+    private ServerApi(Protocol protocol, String host, int port) {
+        super(protocol, host, port);
+    }
+
+    private ServerApi(Protocol protocol, String host) {
+        super(protocol, host);
+    }
+
+    public static ServerApi useLocal() {
+        return new ServerApi(API_LOCAL_PROTOCOL, API_LOCAL_HOST, API_LOCAL_PORT);
+    }
+
+    public static ServerApi useRemote() {
+        return new ServerApi(API_REMOTE_PROTOCOL, API_REMOTE_HOST);
     }
 
     public Request requestGeofenceData() {

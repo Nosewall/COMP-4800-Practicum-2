@@ -12,25 +12,24 @@ import java.util.stream.Collectors;
 
 import kotlin.text.Charsets;
 
-public class Response {
+abstract class Response<T> {
     private final HttpURLConnection connection;
 
     Response(HttpURLConnection connection) {
         this.connection = connection;
     }
 
-    public void read(Consumer<String> onComplete) {
-        ResponseReader<String> reader;
-        reader = new ResponseReader<String>(
+    public void read(Consumer<T> onComplete) {
+        ResponseReader<T> reader;
+        reader = new ResponseReader<>(
             this::getInputStream,
-            Response::streamToString,
-            onComplete
+            this::decodeStream,
+            (body) -> {
+                onComplete.accept(body);
+                connection.disconnect();
+            }
         );
         reader.start();
-    }
-
-    public void close() {
-        connection.disconnect();
     }
 
     private InputStream getInputStream() {
@@ -45,36 +44,5 @@ public class Response {
         return stream;
     }
 
-    private static String streamToString(InputStream stream) {
-        InputStreamReader reader = new InputStreamReader(stream, Charsets.UTF_8);
-        List<Character> buffer = new ArrayList<>();
-
-        char nextCharacter;
-        Predicate<Character> isEndOfString = (character) -> character == (char)(-1);
-
-        try {
-            do {
-                nextCharacter = (char)reader.read();
-                if (!isEndOfString.test(nextCharacter)) { buffer.add(nextCharacter); }
-            } while (!isEndOfString.test(nextCharacter));
-        } catch (IOException exception) {
-            System.err.println("Unable to read response buffer");
-            exception.printStackTrace(System.err);
-        }
-
-        try {
-            reader.close();
-        } catch (IOException exception) {
-            System.err.println("Unable to close response stream reader");
-            exception.printStackTrace(System.err);
-        }
-
-        String text = buffer.stream()
-            .map(String::valueOf)
-            .collect(Collectors.joining());
-
-        buffer.clear();
-
-        return text;
-    }
+    protected abstract T decodeStream(InputStream stream);
 }

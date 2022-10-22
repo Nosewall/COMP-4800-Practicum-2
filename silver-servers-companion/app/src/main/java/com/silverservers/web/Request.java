@@ -4,14 +4,14 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class Request extends Thread {
+public class Request {
     private final URL url;
 
     public Request(URL url) {
         this.url = url;
     }
 
-    public Response getResponse() {
+    public StringResponse getStringResponse() {
         HttpURLConnection connection;
 
         try {
@@ -22,6 +22,6 @@ public class Request extends Thread {
             return null;
         }
 
-        return new Response(connection);
+        return new StringResponse(connection);
     }
 }
