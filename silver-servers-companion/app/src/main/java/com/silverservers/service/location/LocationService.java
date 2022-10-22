@@ -8,11 +8,21 @@ import android.os.IBinder;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import com.google.android.gms.common.util.IOUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.LocationServices;
 import com.silverservers.companion.R;
+import com.silverservers.http.Api;
 import com.silverservers.service.ServiceNotifier;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.CharBuffer;
+
+import kotlin.text.Charsets;
 
 public class LocationService extends Service {
     public enum Mode {
@@ -24,8 +34,19 @@ public class LocationService extends Service {
     private static final String DESCRIPTION = "Tracking location in background";
     private static final int ICON = R.drawable.ic_location_service;
 
+
+
     private Mode mode;
     private ServiceNotifier notifier;
+    private Api api = new Api(API_TEST);
+
+    private static final String API_TEST = "https://catfact.ninja";
+    private static final String API_TEST_PATH = "fact";
+
+    private static final String EMULATOR_LOCALHOST = "10.0.2.2";
+    private static final String API_LOCAL = "https://"
+        + EMULATOR_LOCALHOST
+        + ":8000";
 
     @Nullable
     @Override
@@ -104,6 +125,8 @@ public class LocationService extends Service {
                 + coordinateString
             );
         });
+
+        api.request("fact", System.out::println).start();
     }
 
     /**

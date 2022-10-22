@@ -52,6 +52,7 @@ function login(req, res, server) {
  * Gets geofence point data.
  */
 function geofenceData(req, res, server) {
+  console.log("Get data");
   res.send(server.geofencePoints);
 }
 
