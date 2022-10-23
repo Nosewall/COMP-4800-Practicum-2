@@ -11,8 +11,11 @@ import androidx.core.app.NotificationCompat;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.LocationServices;
+import com.silverservers.app.App;
 import com.silverservers.companion.R;
 import com.silverservers.service.ServiceNotifier;
+
+import java.time.LocalDateTime;
 
 public class LocationService extends Service {
     public enum Mode {
@@ -104,6 +107,15 @@ public class LocationService extends Service {
                 + coordinateString
             );
         });
+
+        App.getServerApi().requestUpdateLocation(
+            LocalDateTime.now(),
+            location.getLatitude(),
+            location.getLongitude(),
+            (response) -> {
+                response.read(System.out::println);
+            }
+        );
     }
 
     /**

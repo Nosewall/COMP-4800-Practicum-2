@@ -7,6 +7,8 @@ import express from "express";
  */
 export default function register(app, server) {
   app.use(express.static("./public"));
+  app.use(express.text());
+  app.use(express.json());
 
   const get = (path, route) => map(app, "get", path, route, server);
   const post = (path, route) => map(app, "post", path, route, server);
@@ -62,7 +64,14 @@ function extendSession(req, res, server) {
 
 function updateLocation(req, res, server) {
   console.log(updateLocation);
-  res.end();
+
+  const { time, latitude, longitude } = req.body;
+
+  console.log(time);
+  console.log(latitude);
+  console.log(longitude);
+
+  res.send("Location received");
 }
 
 function geofenceEnter(req, res, server) {
