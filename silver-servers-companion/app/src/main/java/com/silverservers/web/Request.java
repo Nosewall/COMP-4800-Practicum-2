@@ -1,22 +1,13 @@
 package com.silverservers.web;
 
 import org.json.JSONObject;
-
-import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import kotlin.text.Charsets;
 
@@ -82,8 +73,6 @@ public class Request {
 
     private void encodeStream(OutputStream stream, String data) {
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(stream, Charsets.UTF_8));
-
-        System.out.println(data);
 
         try {
             writer.write(data);
