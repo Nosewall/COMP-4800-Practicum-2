@@ -1,17 +1,33 @@
 package com.silverservers.web;
 
+import org.json.JSONObject;
+
+import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import kotlin.text.Charsets;
 
 public class Request {
-    private final URL url;
+    private final HttpURLConnection connection;
 
     public Request(URL url) {
-        this.url = url;
+        this.connection = openConnection(url);
     }
 
-    private HttpURLConnection openConnection() {
+    private HttpURLConnection openConnection(URL url) {
         HttpURLConnection connection;
 
         try {
@@ -25,13 +41,70 @@ public class Request {
         return connection;
     }
 
+    public void write(String body, Consumer<Request> onComplete) {
+        connection.setDoOutput(true);
+        connection.setRequestProperty("content-type", "text/plain");
+
+        RequestWriter<String> writer = new RequestWriter<>(
+            body,
+            this::getOutputStream,
+            this::encodeStream,
+            () -> onComplete.accept(this)
+        );
+        writer.start();
+    }
+
+    public void write(JSONObject body, Consumer<Request> onComplete) {
+        connection.setDoOutput(true);
+        connection.setRequestProperty("content-type", "application/json");
+
+        RequestWriter<String> writer = new RequestWriter<>(
+            body.toString(),
+            this::getOutputStream,
+            this::encodeStream,
+            () -> onComplete.accept(this)
+        );
+        writer.start();
+    }
+
+    private OutputStream getOutputStream() {
+        OutputStream stream;
+        try {
+            stream = connection.getOutputStream();
+        } catch (IOException exception) {
+            System.err.println("Unable to stream request");
+            exception.printStackTrace(System.err);
+            return null;
+        }
+        return stream;
+    }
+
+
+    private void encodeStream(OutputStream stream, String data) {
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(stream, Charsets.UTF_8));
+
+        System.out.println(data);
+
+        try {
+            writer.write(data);
+        } catch (IOException exception) {
+            System.err.println("Unable to write request");
+            exception.printStackTrace(System.err);
+        }
+
+        try {
+            writer.close();
+        } catch (IOException exception) {
+            System.err.println("Unable to close request stream writer");
+            exception.printStackTrace(System.err);
+        }
+    }
+
     public StringResponse getStringResponse() {
-        HttpURLConnection connection = openConnection();
         return new StringResponse(connection);
     }
 
     public JsonResponse getJsonResponse() {
-        HttpURLConnection connection = openConnection();
         return new JsonResponse(connection);
     }
 }

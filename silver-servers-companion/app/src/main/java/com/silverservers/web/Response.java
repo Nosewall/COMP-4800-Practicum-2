@@ -30,7 +30,7 @@ abstract class Response<T> {
         try {
             stream = connection.getInputStream();
         } catch (IOException exception) {
-            System.err.println("Unable to get response");
+            System.err.println("Unable to stream response");
             exception.printStackTrace(System.err);
             return null;
         }

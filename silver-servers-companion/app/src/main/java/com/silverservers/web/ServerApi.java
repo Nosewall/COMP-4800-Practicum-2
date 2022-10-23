@@ -2,6 +2,12 @@ package com.silverservers.web;
 
 import com.silverservers.app.App;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.time.LocalDateTime;
+import java.util.function.Consumer;
+
 public class ServerApi extends Api {
     private static final Api.Protocol API_LOCAL_PROTOCOL = Api.Protocol.HTTP;
     private static final String API_LOCAL_HOST = App.EMULATOR_LOCALHOST;
@@ -24,6 +30,21 @@ public class ServerApi extends Api {
 
     public static ServerApi useRemote() {
         return new ServerApi(API_REMOTE_PROTOCOL, API_REMOTE_HOST);
+    }
+
+    public void requestUpdateLocation(LocalDateTime time, double latitude, double longitude, Consumer<StringResponse> onResponse) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("time", time.toString());
+            json.put("latitude", latitude);
+            json.put("longitude", longitude);
+        } catch (JSONException exception) {
+            exception.printStackTrace(System.err);
+        }
+
+        request("update-location").write(json, (request) -> {
+            onResponse.accept(request.getStringResponse());
+        });
     }
 
     public JsonResponse requestGeofenceData() {
