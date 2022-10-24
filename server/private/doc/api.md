@@ -84,6 +84,10 @@ Secret key for secure user validation, usually password
 Message indicating credentials are incorrect
 
 403 Forbidden {string}
+  
+Message indicating that session cannot be extended
+
+403 Forbidden {string}
 Message indicating that session cannot be extended
 
 500 Internal Server Error {string}
@@ -120,6 +124,10 @@ Message indicating server successfully received location
 
 Message indicating credentials are incorrect
 
+400 Bad Request {string}
+
+Message indicating that credentials are valid, but the location data is invalid
+
 500 Internal Server Error {string}
 
 Message indicating server error
@@ -149,6 +157,10 @@ Message indicating server successfully registered user in geofence
 
 Message indicating credentials are incorrect
 
+400 Bad Request {string}
+
+Message indicating that credentials are valid, but the geofence id is invalid
+
 500 Internal Server Error {string}
 
 Message indicating server error
@@ -177,6 +189,10 @@ Message indicating server successfully unregistered user in geofence
 401 Unauthorized {string}
 
 Message indicating credentials are incorrect
+
+400 Bad Request {string}
+  
+Message indicating that credentials are valid, but the geofence id is invalid
 
 500 Internal Server Error {string}
 
