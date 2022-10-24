@@ -126,5 +126,6 @@ public class LocationService extends Service {
      */
     private void setNotificationDefaults(NotificationCompat.Builder builder) {
         builder.setSmallIcon(ICON);
+        builder.setSilent(true);
     }
 }
