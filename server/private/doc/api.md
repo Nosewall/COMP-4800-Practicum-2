@@ -83,6 +83,9 @@ Secret key for secure user validation, usually password
 
 Message indicating credentials are incorrect
 
+403 Forbidden {string}
+Message indicating that session cannot be extended
+
 500 Internal Server Error {string}
 
 Message indicating server error
