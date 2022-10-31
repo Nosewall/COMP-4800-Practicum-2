@@ -1,6 +1,10 @@
 import { read } from './library/file.js';
 import { marked } from "marked";
 import express from "express";
+import { activeSessions, setActiveSessions, generateSessionId } from './server.js';
+
+const getUsers = async () => readJson("./private/data/users.json");
+const emailPattern = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 
 /**
  * Registers route mappings to a given app.
@@ -45,9 +49,30 @@ async function api(req, res) {
   res.send(html);
 }
 
-function login(req, res, server) {
+async function login(req, res, server) {
   console.log(login);
-  res.end();
+  const users = await getUsers();
+  if (!req.body.public_key || !req.body.private_key) {
+    res.status(400);
+    res.json({msg: 'Missing public or private key.'});
+  }
+  let foundUser = null;
+  let authType = emailPattern.test(req.body.public_key) ? 'email' : 'username';
+  
+  users.forEach(user => {
+    if (user[authType] == req.body.public_key)
+      foundUser = user;
+  });
+  
+  if (foundUser) {
+    let { sessionId, keepAliveKey } = generateNewSession();
+    // add new session info to server.js activeSessions
+    res.json({
+      user_id: foundUser.id,
+      session_id: sessionId,
+      keep_alive_key: keepAliveKey
+    })
+  }
 }
 
 /**

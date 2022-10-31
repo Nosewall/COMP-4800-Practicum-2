@@ -1,0 +1,32 @@
+[
+    {
+        "user_id": "1000",
+        "email": "joe@test.com",
+        "username": "Joe Test"
+    },
+    {
+        "user_id": "1001",
+        "email": "janette@test.com",
+        "username": "Janette Test"
+    },
+    {
+        "user_id": "2068",
+        "email": "jonathan@test.com",
+        "username": "Jonathan"
+    },
+    {
+        "user_id": "6923",
+        "email": "bach@test.com",
+        "username": "Bach"
+    },
+    {
+        "user_id": "8592",
+        "email": "nolan@test.com",
+        "username": "Nolan"
+    },
+    {
+        "user_id": "7051",
+        "email": "tony@test.com",
+        "username": "Tony"
+    }
+]

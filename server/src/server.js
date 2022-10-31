@@ -1,16 +1,30 @@
 import { readJson } from "./library/file.js"
+import generateRandomString from "./library/random_generator.js";
 
 /**
  * Map of currently active sessions.
  * Key is the session id.
  * Value contains `userId`, `keepAliveKey` and `startTime`.
  */
-const activeSessions = {
+export var activeSessions = {
   "{SESSION_ID}": {
     userId: "abcd-1234",
     keepAliveKey: "xyz-789",
     startTime: Date.now(),
   }
+}
+
+export function setActiveSessions(newSessions) { activeSessions = newSessions; }
+
+export function generateSessionId() {
+  let sessionIds = Object.keys(activeSessions);
+  let sessionId = null;
+  while (!sessionId) {
+    let tempSessionId = generateRandomString(8);
+    if (!tempSessionId in sessionIds)
+      sessionId = tempSessionId;
+  }
+  return sessionId;
 }
 
 const getGeofencePoints = async () => readJson("./private/data/geofence_points.json");
