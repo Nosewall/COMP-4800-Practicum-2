@@ -1,32 +1,38 @@
 [
     {
-        "user_id": "1000",
+        "userId": "1000",
         "email": "joe@test.com",
-        "username": "Joe Test"
+        "username": "Joe Test",
+        "password": "11111"
     },
     {
-        "user_id": "1001",
+        "userId": "1001",
         "email": "janette@test.com",
-        "username": "Janette Test"
+        "username": "Janette Test",
+        "password": "99999"
     },
     {
-        "user_id": "2068",
+        "userId": "2068",
         "email": "jonathan@test.com",
-        "username": "Jonathan"
+        "username": "Jonathan",
+        "password": "12345"
     },
     {
-        "user_id": "6923",
+        "userId": "6923",
         "email": "bach@test.com",
-        "username": "Bach"
+        "username": "Bach",
+        "password": "23456"
     },
     {
-        "user_id": "8592",
+        "userId": "8592",
         "email": "nolan@test.com",
-        "username": "Nolan"
+        "username": "Nolan",
+        "password": "34567"
     },
     {
-        "user_id": "7051",
+        "userId": "7051",
         "email": "tony@test.com",
-        "username": "Tony"
+        "username": "Tony",
+        "password": "45678"
     }
 ]

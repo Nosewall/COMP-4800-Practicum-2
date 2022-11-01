@@ -1,33 +1,38 @@
 import { readJson } from "./library/file.js"
-import generateRandomString from "./library/random_generator.js";
+import { generateUniqueSessionId,
+  generateUniqueKeepAliveKey } from "./library/randomGenerator.js";
 
 /**
  * Map of currently active sessions.
  * Key is the session id.
  * Value contains `userId`, `keepAliveKey` and `startTime`.
  */
-export var activeSessions = {
-  "{SESSION_ID}": {
+export var activeSessions = [
+  {
+    sessionId: "{SESSION_ID}",
     userId: "abcd-1234",
     keepAliveKey: "xyz-789",
     startTime: Date.now(),
   }
-}
+]
 
 export function setActiveSessions(newSessions) { activeSessions = newSessions; }
 
-export function generateSessionId() {
-  let sessionIds = Object.keys(activeSessions);
-  let sessionId = null;
-  while (!sessionId) {
-    let tempSessionId = generateRandomString(8);
-    if (!tempSessionId in sessionIds)
-      sessionId = tempSessionId;
+export function createNewSession(userId) {
+  if (!userId) throw Error('Must provide userId for new session.')
+  setActiveSessions(activeSessions.filter(session => session.userId != userId))
+  let sessionId = generateUniqueSessionId(activeSessions);
+  let newSession = {
+    sessionId: sessionId,
+    userId: userId,
+    keepAliveKey: generateUniqueKeepAliveKey(activeSessions),
+    startTime: Date.now()
   }
-  return sessionId;
+  activeSessions.push(newSession);
+  return newSession;
 }
 
-const getGeofencePoints = async () => readJson("./private/data/geofence_points.json");
+const getGeofencePoints = async () => readJson("./private/data/geofencePoints.json");
 
 /**
  * Entry point for all internal server logic.
@@ -44,6 +49,7 @@ export default async function start() {
   console.log("Initialized geofence state:", geofenceState);
 
   return {
+    activeSessions,
     geofencePoints,
   }
 }

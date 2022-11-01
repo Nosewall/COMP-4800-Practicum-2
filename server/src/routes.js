@@ -1,7 +1,7 @@
-import { read } from './library/file.js';
+import { read, readJson } from './library/file.js';
 import { marked } from "marked";
 import express from "express";
-import { activeSessions, setActiveSessions, generateSessionId } from './server.js';
+import { activeSessions, setActiveSessions, createNewSession } from './server.js';
 
 const getUsers = async () => readJson("./private/data/users.json");
 const emailPattern = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
@@ -56,22 +56,28 @@ async function login(req, res, server) {
     res.status(400);
     res.json({msg: 'Missing public or private key.'});
   }
+  
   let foundUser = null;
   let authType = emailPattern.test(req.body.public_key) ? 'email' : 'username';
-  
-  users.forEach(user => {
+  for (let user in users) {
     if (user[authType] == req.body.public_key)
       foundUser = user;
-  });
-  
-  if (foundUser) {
-    let { sessionId, keepAliveKey } = generateNewSession();
-    // add new session info to server.js activeSessions
+  }
+
+  if (!foundUser) {
+    res.status(400);
+    res.json({msg: 'No such user found.'})
+  } else {
+    if (foundUser.password != req.body.private_key) {
+      res.status(401);
+      res.json({msg: 'Incorrect credentials.'});
+    }
+    let newSession = createNewSession(foundUser.id);
     res.json({
-      user_id: foundUser.id,
-      session_id: sessionId,
-      keep_alive_key: keepAliveKey
-    })
+      user_id: foundUser.userId,
+      session_id: newSession.sessionId,
+      keep_alive_key: newSession.keepAliveKey
+    });
   }
 }
 
