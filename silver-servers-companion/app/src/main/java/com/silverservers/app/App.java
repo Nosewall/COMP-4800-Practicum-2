@@ -85,7 +85,6 @@ public class App extends Application {
         App.getTestApi().requestFact().read((json) -> {
             System.out.println("Test response JSON object: ");
             System.out.println(json);
-
             System.out.println("Test response JSON 'fact' entry: ");
             try {
                 System.out.println(json.getString("fact"));

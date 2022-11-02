@@ -67,19 +67,21 @@ function updateLocation(req, res, server) {
 
   const { time, latitude, longitude } = req.body;
 
-  console.log(time);
-  console.log(latitude);
-  console.log(longitude);
-
-  res.send("Location received");
+  res.send(`Location received: ${latitude}, ${longitude}`);
 }
 
 function geofenceEnter(req, res, server) {
   console.log(geofenceEnter);
-  res.end();
+
+  const { geofence_id } = req.body;
+
+  res.send(`Geofence enter: ${geofence_id}`)
 }
 
 function geofenceExit(req, res, server) {
   console.log(geofenceExit);
-  res.end();
+
+  const { geofence_id } = req.body;
+
+  res.send(`Geofence exit: ${geofence_id}`);
 }

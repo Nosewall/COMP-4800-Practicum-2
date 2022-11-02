@@ -2,15 +2,22 @@ package com.silverservers.service.location;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.location.Location;
+
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 import com.google.android.gms.location.GeofencingRequest;
 import com.silverservers.app.App;
+import com.silverservers.companion.R;
+import com.silverservers.service.ServiceNotifier;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -32,16 +39,36 @@ public class GeofenceService extends IntentService {
         int geofenceTransition = geofencingEvent.getGeofenceTransition();
         List<Geofence> geofences = geofencingEvent.getTriggeringGeofences();
 
-        switch (geofenceTransition) {
-            case Geofence.GEOFENCE_TRANSITION_ENTER: {
-                System.out.println("Geofence Enter: " + geofences);
-                break;
-            }
-            case Geofence.GEOFENCE_TRANSITION_EXIT: {
-                System.out.println("Geofence Exit: " + geofences);
-                break;
+        for (Geofence geofence : geofences) {
+            switch (geofenceTransition) {
+                case Geofence.GEOFENCE_TRANSITION_ENTER: {
+                    onGeofenceEnter(geofence.getRequestId());
+                    break;
+                }
+                case Geofence.GEOFENCE_TRANSITION_EXIT: {
+                    onGeofenceExit(geofence.getRequestId());
+                    break;
+                }
             }
         }
+    }
+
+    private void onGeofenceEnter(String id) {
+        App.getServerApi().requestGeofenceEnter(
+            id,
+            (response) -> {
+                response.read(System.out::println);
+            }
+        );
+    }
+
+    private void onGeofenceExit(String id) {
+        App.getServerApi().requestGeofenceExit(
+            id,
+            (response) -> {
+                response.read(System.out::println);
+            }
+        );
     }
 
     public static GeofencingRequest buildGeofenceRequest(List<Geofence> geofences) {

@@ -1,29 +1,26 @@
 package com.silverservers.service.location;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
 import android.location.Location;
 import android.os.IBinder;
+import android.os.Looper;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.Geofence;
-import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.Priority;
 import com.silverservers.app.App;
 import com.silverservers.companion.R;
 import com.silverservers.service.ServiceNotifier;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
 
 public class LocationService extends Service {
     private static final String NAME = "Location Service";
@@ -46,14 +43,16 @@ public class LocationService extends Service {
      * Runs the service worker.
      * Registers the service as a foreground service with a base notification.
      */
+    @SuppressLint("MissingPermission")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         FusedLocationProviderClient locationClient = LocationServices.getFusedLocationProviderClient(this);
         CoordinateWorker worker = new CoordinateWorker(locationClient, this::onReceiveCoordinates);
 
-//        worker.run();
+        worker.run();
 
         notifier = new ServiceNotifier(this, NAME, DESCRIPTION);
+
         startForeground(
             ServiceNotifier.FOREGROUND_NOTIFICATION_ID,
             notifier.buildNotification(this::setNotificationDefaults)
@@ -76,11 +75,6 @@ public class LocationService extends Service {
             + location.getLatitude()
             + ", "
             + location.getLongitude();
-
-        System.out.println(
-            "Receive coordinates: "
-            + coordinateString
-        );
 
         notifier.updateNotification(ServiceNotifier.FOREGROUND_NOTIFICATION_ID, builder -> {
             setNotificationDefaults(builder);
