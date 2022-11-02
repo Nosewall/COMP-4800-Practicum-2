@@ -9,35 +9,33 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.LocationServices;
 import com.silverservers.app.App;
 import com.silverservers.companion.R;
 import com.silverservers.service.ServiceNotifier;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 public class LocationService extends Service {
-    public enum Mode {
-        Location,
-        Geofencing,
-    }
-
     private static final String NAME = "Location Service";
     private static final String DESCRIPTION = "Tracking location in background";
     private static final int ICON = R.drawable.ic_location_service;
 
-    private Mode mode;
     private ServiceNotifier notifier;
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
-    }
-
-    private void setParameters(Intent intent) {
-        mode = LocationServiceIntent.extractMode(intent);
     }
 
     /**
@@ -50,28 +48,12 @@ public class LocationService extends Service {
      */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        setParameters(intent);
+        FusedLocationProviderClient locationClient = LocationServices.getFusedLocationProviderClient(this);
+        CoordinateWorker worker = new CoordinateWorker(locationClient, this::onReceiveCoordinates);
+
+//        worker.run();
 
         notifier = new ServiceNotifier(this, NAME, DESCRIPTION);
-
-        // May create two services later, or implement this in a different way,
-        // However this should suffice for rudimentary testing.
-        Runnable worker;
-        switch (mode) {
-            case Geofencing: {
-                GeofencingClient geofencingClient = LocationServices.getGeofencingClient(this);
-                worker = new GeofencingWorker(geofencingClient);
-                break;
-            }
-
-            default: {
-                FusedLocationProviderClient locationClient = LocationServices.getFusedLocationProviderClient(this);
-                worker = new CoordinateWorker(locationClient, this::onReceiveCoordinates);
-                break;
-            }
-        }
-        worker.run();
-
         startForeground(
             ServiceNotifier.FOREGROUND_NOTIFICATION_ID,
             notifier.buildNotification(this::setNotificationDefaults)

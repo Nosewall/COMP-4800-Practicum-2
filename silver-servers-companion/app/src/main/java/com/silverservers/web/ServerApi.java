@@ -47,7 +47,7 @@ public class ServerApi extends Api {
         });
     }
 
-    public JsonResponse requestGeofenceData() {
-        return request("geofence-data").getJsonResponse();
+    public JsonArrayResponse requestGeofenceData() {
+        return request("geofence-data").getJsonArrayResponse();
     }
 }

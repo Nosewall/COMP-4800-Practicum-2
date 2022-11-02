@@ -55,8 +55,6 @@ public class CoordinateWorker implements Runnable {
     private void routine() {
         System.out.println("Request coordinates: " + LocalDateTime.now().toLocalTime());
 
-        // TODO: Request permissions
-        // Probably in base app rather that the service.
         client.getCurrentLocation(
             Priority.PRIORITY_HIGH_ACCURACY,
             cancelSource.getToken()
