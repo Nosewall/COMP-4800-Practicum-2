@@ -28,6 +28,10 @@ abstract class Response<T> {
         reader.start();
     }
 
+    public int getStatusCode() throws IOException {
+        return connection.getResponseCode();
+    }
+
     private InputStream getInputStream() {
         try {
             return connection.getInputStream();

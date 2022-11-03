@@ -16,6 +16,7 @@ import com.silverservers.app.App;
 import com.silverservers.companion.R;
 import com.silverservers.service.ServiceNotifier;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 public class LocationService extends Service {
@@ -84,10 +85,20 @@ public class LocationService extends Service {
             LocalDateTime.now(),
             location.getLatitude(),
             location.getLongitude(),
-            (response) -> response.read(
-                System.out::println,
-                System.err::println
-            )
+            (response) -> {
+                int statusCode;
+                try {
+                    statusCode = response.getStatusCode();
+                    System.out.println("Status code: " + statusCode);
+                } catch (IOException exception) {
+                    exception.printStackTrace(System.err);
+                }
+
+                response.read(
+                    System.out::println,
+                    System.err::println
+                );
+            }
         );
     }
 
