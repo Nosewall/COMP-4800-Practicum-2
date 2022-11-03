@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UncheckedIOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.function.Consumer;
@@ -12,6 +13,9 @@ import java.util.function.Consumer;
 import kotlin.text.Charsets;
 
 public class Request {
+    private static final int CONNECT_TIMEOUT = 1000;
+    private static final int READ_TIMEOUT = 1000;
+
     private final HttpURLConnection connection;
 
     public Request(URL url) {
@@ -29,10 +33,13 @@ public class Request {
             return null;
         }
 
+        connection.setConnectTimeout(CONNECT_TIMEOUT);
+        connection.setReadTimeout(READ_TIMEOUT);
+
         return connection;
     }
 
-    public void write(String body, Consumer<Request> onComplete) {
+    public void write(String body, Consumer<Request> onSuccess, Consumer<Exception> onError) {
         connection.setDoOutput(true);
         connection.setRequestProperty("content-type", "text/plain");
 
@@ -40,12 +47,13 @@ public class Request {
             body,
             this::getOutputStream,
             this::encodeStream,
-            () -> onComplete.accept(this)
+            () -> onSuccess.accept(this),
+            onError
         );
         writer.start();
     }
 
-    public void write(JSONObject body, Consumer<Request> onComplete) {
+    public void write(JSONObject body, Consumer<Request> onSuccess, Consumer<Exception> onError) {
         connection.setDoOutput(true);
         connection.setRequestProperty("content-type", "application/json");
 
@@ -53,7 +61,8 @@ public class Request {
             body.toString(),
             this::getOutputStream,
             this::encodeStream,
-            () -> onComplete.accept(this)
+            () -> onSuccess.accept(this),
+            onError
         );
         writer.start();
     }
@@ -63,13 +72,10 @@ public class Request {
         try {
             stream = connection.getOutputStream();
         } catch (IOException exception) {
-            System.err.println("Unable to stream request");
-            exception.printStackTrace(System.err);
-            return null;
+            throw new UncheckedIOException(exception);
         }
         return stream;
     }
-
 
     private void encodeStream(OutputStream stream, String data) {
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(stream, Charsets.UTF_8));

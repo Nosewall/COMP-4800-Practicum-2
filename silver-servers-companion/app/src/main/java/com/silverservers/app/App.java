@@ -5,18 +5,15 @@ import android.app.Application;
 import android.app.PendingIntent;
 import android.content.Intent;
 
-import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
-import com.silverservers.service.location.GeofenceService;
+import com.silverservers.service.geofence.GeofenceService;
 import com.silverservers.service.location.LocationService;
 import com.silverservers.web.ServerApi;
 import com.silverservers.web.TestApi;
 
 import org.json.JSONException;
-
-import java.util.List;
 
 public class App extends Application {
     public static final String EMULATOR_LOCALHOST = "10.0.2.2";
@@ -42,26 +39,12 @@ public class App extends Application {
     }
 
     private void startLocationService() {
-        Intent locationService = getLocationIntent();
-        startForegroundService(locationService);
+        LocationService.start(this, getLocationIntent());
     }
 
     @SuppressLint("MissingPermission")
     private void startGeofenceService() {
-        GeofenceService.requestGeofences(geofences -> {
-            GeofencingClient client = LocationServices.getGeofencingClient(this);
-            GeofencingRequest request = GeofenceService.buildGeofenceRequest(geofences);
-            client.addGeofences(
-                request,
-                getGeofenceIntent()
-            ).addOnSuccessListener(success -> {
-                System.out.println("Geofencing initialized");
-                System.out.println(request.getGeofences());
-            }).addOnFailureListener(failure -> {
-                System.out.println("Geofencing error");
-                failure.printStackTrace(System.err);
-            });
-        });
+        GeofenceService.start(this, getGeofenceIntent());
     }
 
     private Intent getLocationIntent() {
@@ -91,6 +74,6 @@ public class App extends Application {
             } catch (JSONException exception) {
                 exception.printStackTrace(System.err);
             }
-        });
+        }, System.err::println);
     }
 }
