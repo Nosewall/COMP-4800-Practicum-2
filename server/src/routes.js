@@ -1,7 +1,7 @@
-import { read, readJson } from './library/file.js';
+import { read } from './library/file.js';
 import { marked } from "marked";
 import express from "express";
-import { activeSessions, setActiveSessions, createNewSession } from './server.js';
+import { setActiveSessions, createNewSession } from './server.js';
 import users from "../private/data/users.json" assert {type: 'json'}
 
 const emailPattern = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
