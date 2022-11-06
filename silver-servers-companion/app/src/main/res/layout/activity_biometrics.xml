@@ -9,9 +9,27 @@
     android:orientation="vertical"
     tools:context="com.silverservers.app.DashboardActivity">
 
-    <Button
-        android:id="@+id/biometrics_button"
-        android:layout_width="335dp"
-        android:layout_height="85dp"
-        android:text="Prompt for Biometrics" />
+    <TextView
+        android:id="@+id/textview_biometrics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
+        android:lineSpacingExtra="14sp"
+        android:text="@string/textview_biometric_prompt"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="41dp"
+        android:orientation="vertical"></LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageView_biometrics"
+        android:layout_width="140dp"
+        android:layout_height="124dp"
+        app:srcCompat="@drawable/ic_fingerprint_purple" />
+
 </LinearLayout>
