@@ -49,7 +49,7 @@ async function api(req, res) {
   res.send(html);
 }
 
-async function login(req, res, server) {
+function login(req, res, server) {
   console.log(login);
   if (!req.body.public_key || !req.body.private_key) {
     res.status(400).json({msg: 'Missing public or private key.'});
