@@ -1,9 +1,15 @@
 package com.silverservers.service.location;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Looper;
+
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.CancellationTokenSource;
 
@@ -14,16 +20,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class CoordinateWorker implements Runnable {
-    private static final int THREAD_POOL_SIZE = 1;
-
-    private static final int DELAY = 1;
-    private static final int INTERVAL = 5;
-    private static final TimeUnit COUNTER = TimeUnit.SECONDS;
+    private static final int INTERVAL = 5000;
 
     private final FusedLocationProviderClient client;
     private final Consumer<Location> onUpdate;
-
-    private final CancellationTokenSource cancelSource = new CancellationTokenSource();
 
     public CoordinateWorker(FusedLocationProviderClient client, Consumer<Location> onUpdate) {
         super();
@@ -36,30 +36,19 @@ public class CoordinateWorker implements Runnable {
      *
      * Runs `routine()` periodically.
      */
+    @SuppressLint("MissingPermission")
     @Override
     public void run() {
-        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(THREAD_POOL_SIZE);
-        scheduledExecutorService.scheduleAtFixedRate(
-            this::routine,
-            DELAY,
-            INTERVAL,
-            COUNTER
+        client.requestLocationUpdates(
+            buildLocationRequest(),
+            onUpdate::accept,
+            Looper.myLooper()
         );
     }
 
-    /**
-     * Gets the users current location and send the result
-     * to the `onUpdate` handler.
-     */
-    @SuppressLint("MissingPermission")
-    private void routine() {
-        System.out.println("Request coordinates: " + LocalDateTime.now().toLocalTime());
-
-        // TODO: Request permissions
-        // Probably in base app rather that the service.
-        client.getCurrentLocation(
-            Priority.PRIORITY_HIGH_ACCURACY,
-            cancelSource.getToken()
-        ).addOnSuccessListener(onUpdate::accept);
+    private LocationRequest buildLocationRequest() {
+        return new LocationRequest.Builder(INTERVAL)
+            .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
+            .build();
     }
 }

@@ -93,7 +93,11 @@ public class Request {
         return new StringResponse(connection);
     }
 
-    public JsonResponse getJsonResponse() {
-        return new JsonResponse(connection);
+    public JsonObjectResponse getJsonObjectResponse() {
+        return new JsonObjectResponse(connection);
+    }
+
+    public JsonArrayResponse getJsonArrayResponse() {
+        return new JsonArrayResponse(connection);
     }
 }

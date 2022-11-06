@@ -1,14 +1,22 @@
 package com.silverservers.app;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
+import android.app.PendingIntent;
 import android.content.Intent;
 
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.GeofencingRequest;
+import com.google.android.gms.location.LocationServices;
+import com.silverservers.service.location.GeofenceService;
 import com.silverservers.service.location.LocationService;
-import com.silverservers.service.location.LocationServiceIntent;
 import com.silverservers.web.ServerApi;
 import com.silverservers.web.TestApi;
 
 import org.json.JSONException;
+
+import java.util.List;
 
 public class App extends Application {
     public static final String EMULATOR_LOCALHOST = "10.0.2.2";
@@ -29,18 +37,44 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Intent locationService = createLocationService();
+        startLocationService();
+        startGeofenceService();
+    }
+
+    private void startLocationService() {
+        Intent locationService = getLocationIntent();
         startForegroundService(locationService);
     }
 
-    /**
-     * Launches the location background service
-     */
-    private LocationServiceIntent createLocationService() {
-        return new LocationServiceIntent(
+    @SuppressLint("MissingPermission")
+    private void startGeofenceService() {
+        GeofenceService.requestGeofences(geofences -> {
+            GeofencingClient client = LocationServices.getGeofencingClient(this);
+            GeofencingRequest request = GeofenceService.buildGeofenceRequest(geofences);
+            client.addGeofences(
+                request,
+                getGeofenceIntent()
+            ).addOnSuccessListener(success -> {
+                System.out.println("Geofencing initialized");
+                System.out.println(request.getGeofences());
+            }).addOnFailureListener(failure -> {
+                System.out.println("Geofencing error");
+                failure.printStackTrace(System.err);
+            });
+        });
+    }
+
+    private Intent getLocationIntent() {
+        return new Intent(
             this,
-            LocationService.Mode.Location
+            LocationService.class
         );
+    }
+
+    @SuppressLint("UnspecifiedImmutableFlag")
+    private PendingIntent getGeofenceIntent() {
+        Intent intent = new Intent(this, GeofenceService.class);
+        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     /**
@@ -51,7 +85,6 @@ public class App extends Application {
         App.getTestApi().requestFact().read((json) -> {
             System.out.println("Test response JSON object: ");
             System.out.println(json);
-
             System.out.println("Test response JSON 'fact' entry: ");
             try {
                 System.out.println(json.getString("fact"));

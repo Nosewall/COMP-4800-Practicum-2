@@ -1,24 +1,25 @@
 package com.silverservers.web;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 
-public class JsonResponse extends Response<JSONObject> {
+abstract class JsonResponse<T> extends Response<T>  {
 
     JsonResponse(HttpURLConnection connection) {
         super(connection);
     }
 
+    protected abstract T parse(String data) throws JSONException;
+
     @Override
-    protected JSONObject decodeStream(InputStream stream) {
+    protected T decodeStream(InputStream stream) {
         String data = StringResponse.streamToString(stream);
 
-        JSONObject jsonData;
+        T json;
         try {
-            jsonData = new JSONObject(data);
+            json = parse(data);
         } catch (JSONException exception) {
             System.err.println("Invalid json format");
             System.err.println(data);
@@ -26,6 +27,6 @@ public class JsonResponse extends Response<JSONObject> {
             return null;
         }
 
-        return jsonData;
+        return json;
     }
 }

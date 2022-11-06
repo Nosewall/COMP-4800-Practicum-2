@@ -35,6 +35,6 @@
         </activity>
         <!-- Services -->
         <service android:name="com.silverservers.service.location.LocationService"/>
-        <receiver android:name="com.silverservers.service.location.GeofencingReceiver"/>
+        <service android:name="com.silverservers.service.location.GeofenceService" />
     </application>
 </manifest>

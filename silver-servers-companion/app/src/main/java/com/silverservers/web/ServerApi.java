@@ -47,7 +47,33 @@ public class ServerApi extends Api {
         });
     }
 
-    public JsonResponse requestGeofenceData() {
-        return request("geofence-data").getJsonResponse();
+    public void requestGeofenceEnter(String id, Consumer<StringResponse> onResponse) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("geofence_id", id);
+        } catch (JSONException exception) {
+            exception.printStackTrace(System.err);
+        }
+
+        request("geofence-enter").write(json, (request) -> {
+            onResponse.accept(request.getStringResponse());
+        });
+    }
+
+    public void requestGeofenceExit(String id, Consumer<StringResponse> onResponse) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("geofence_id", id);
+        } catch (JSONException exception) {
+            exception.printStackTrace(System.err);
+        }
+
+        request("geofence-exit").write(json, (request) -> {
+            onResponse.accept(request.getStringResponse());
+        });
+    }
+
+    public JsonArrayResponse requestGeofenceData() {
+        return request("geofence-data").getJsonArrayResponse();
     }
 }

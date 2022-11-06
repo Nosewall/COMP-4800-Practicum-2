@@ -8,7 +8,7 @@ public class TestApi extends Api {
         super(PROTOCOL, HOST);
     }
 
-    public JsonResponse requestFact() {
-        return request("fact").getJsonResponse();
+    public JsonObjectResponse requestFact() {
+        return request("fact").getJsonObjectResponse();
     }
 }
