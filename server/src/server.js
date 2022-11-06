@@ -10,8 +10,8 @@ import { generateUniqueSessionId,
 export var activeSessions = [
   {
     sessionId: "{SESSION_ID}",
-    userId: "abcd-1234",
-    keepAliveKey: "xyz-789",
+    userId: "abcd1234",
+    keepAliveKey: "xyz789",
     startTime: Date.now(),
   }
 ]
@@ -20,6 +20,7 @@ export function setActiveSessions(newSessions) { activeSessions = newSessions; }
 
 export function createNewSession(userId) {
   if (!userId) throw Error('Must provide userId for new session.')
+  // Remove all previous sessions with same user ID
   setActiveSessions(activeSessions.filter(session => session.userId != userId))
   let sessionId = generateUniqueSessionId(activeSessions);
   let newSession = {

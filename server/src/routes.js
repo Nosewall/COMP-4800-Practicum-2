@@ -2,9 +2,9 @@ import { read, readJson } from './library/file.js';
 import { marked } from "marked";
 import express from "express";
 import { activeSessions, setActiveSessions, createNewSession } from './server.js';
+import users from "../private/data/users.json" assert {type: 'json'}
 
-const getUsers = async () => readJson("./private/data/users.json");
-const emailPattern = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+const emailPattern = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
 /**
  * Registers route mappings to a given app.
@@ -51,33 +51,31 @@ async function api(req, res) {
 
 async function login(req, res, server) {
   console.log(login);
-  const users = await getUsers();
   if (!req.body.public_key || !req.body.private_key) {
-    res.status(400);
-    res.json({msg: 'Missing public or private key.'});
+    res.status(400).json({msg: 'Missing public or private key.'});
   }
   
   let foundUser = null;
   let authType = emailPattern.test(req.body.public_key) ? 'email' : 'username';
-  for (let user in users) {
-    if (user[authType] == req.body.public_key)
-      foundUser = user;
+
+  for (let i in users) {
+    if (users[i][authType] == req.body.public_key)
+      foundUser = users[i];
   }
 
   if (!foundUser) {
-    res.status(400);
-    res.json({msg: 'No such user found.'})
+    res.status(404).json({msg: 'No such user found.'})
   } else {
     if (foundUser.password != req.body.private_key) {
-      res.status(401);
-      res.json({msg: 'Incorrect credentials.'});
+      res.status(401).json({msg: 'Incorrect credentials.'});
+    } else {
+      let newSession = createNewSession(foundUser.userId);
+      res.json({
+        user_id: foundUser.userId,
+        session_id: newSession.sessionId,
+        keep_alive_key: newSession.keepAliveKey
+      });
     }
-    let newSession = createNewSession(foundUser.id);
-    res.json({
-      user_id: foundUser.userId,
-      session_id: newSession.sessionId,
-      keep_alive_key: newSession.keepAliveKey
-    });
   }
 }
 
