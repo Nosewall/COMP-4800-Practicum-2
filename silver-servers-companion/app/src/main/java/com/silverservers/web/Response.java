@@ -2,6 +2,7 @@ package com.silverservers.web;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.net.HttpURLConnection;
 import java.util.function.Consumer;
 
@@ -12,29 +13,31 @@ abstract class Response<T> {
         this.connection = connection;
     }
 
-    public void read(Consumer<T> onComplete) {
+    public void read(Consumer<T> onSuccess, Consumer<Exception> onError) {
         ResponseReader<T> reader;
         reader = new ResponseReader<>(
             this::getInputStream,
             this::decodeStream,
             (body) -> {
-                onComplete.accept(body);
+                onSuccess.accept(body);
                 connection.disconnect();
-            }
+            },
+            onError
         );
+
         reader.start();
     }
 
+    public int getStatusCode() throws IOException {
+        return connection.getResponseCode();
+    }
+
     private InputStream getInputStream() {
-        InputStream stream;
         try {
-            stream = connection.getInputStream();
+            return connection.getInputStream();
         } catch (IOException exception) {
-            System.err.println("Unable to stream response");
-            exception.printStackTrace(System.err);
-            return null;
+            throw new UncheckedIOException(exception);
         }
-        return stream;
     }
 
     protected abstract T decodeStream(InputStream stream);
