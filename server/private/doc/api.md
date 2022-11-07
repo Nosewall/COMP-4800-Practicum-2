@@ -19,10 +19,15 @@ Secret key for secure user validation, usually password
 ```
 {
   user_id {string}: Internal user id for given credentials
+  user_name {string}: User's name
   session_id {string}: Newly generated session id
   keep_alive_key {string}: Newly generated keep alive key for session
 }
 ```
+
+400 Bad Request {string}
+
+Message indicating the request is missing either public/private key(s).
 
 401 Unauthorized {string}
 

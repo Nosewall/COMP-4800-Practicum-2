@@ -32,6 +32,22 @@ public class ServerApi extends Api {
         return new ServerApi(API_REMOTE_PROTOCOL, API_REMOTE_HOST);
     }
 
+    public void requestLogin(String publicKey, String privateKey, Consumer<JsonObjectResponse> onResponse) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("public_key", publicKey);
+            json.put("private_key", privateKey);
+        } catch (JSONException e) {
+            e.printStackTrace(System.err);
+        }
+
+        request("login").write(
+            json,
+            request -> onResponse.accept(request.getJsonObjectResponse()),
+            error -> System.err.println(error.getMessage())
+        );
+    }
+
     public void requestUpdateLocation(LocalDateTime time, double latitude, double longitude, Consumer<StringResponse> onResponse) {
         JSONObject json = new JSONObject();
         try {
