@@ -56,9 +56,11 @@ public class ServerApi extends Api {
             exception.printStackTrace(System.err);
         }
 
-        request("update-location").write(json, (request) -> {
-            onResponse.accept(request.getStringResponse());
-        });
+        request("update-location").write(
+            json,
+            (request) -> onResponse.accept(request.getStringResponse()),
+            error -> System.err.println(error.getMessage())
+        );
     }
 
     public void requestGeofenceEnter(String id, Consumer<StringResponse> onResponse) {
@@ -69,9 +71,11 @@ public class ServerApi extends Api {
             exception.printStackTrace(System.err);
         }
 
-        request("geofence-enter").write(json, (request) -> {
-            onResponse.accept(request.getStringResponse());
-        });
+        request("geofence-enter").write(
+            json,
+            (request) -> onResponse.accept(request.getStringResponse()),
+            error -> System.err.println(error.getMessage())
+        );
     }
 
     public void requestGeofenceExit(String id, Consumer<StringResponse> onResponse) {
@@ -82,12 +86,15 @@ public class ServerApi extends Api {
             exception.printStackTrace(System.err);
         }
 
-        request("geofence-exit").write(json, (request) -> {
-            onResponse.accept(request.getStringResponse());
-        });
+        request("geofence-exit").write(
+            json,
+            (request) -> onResponse.accept(request.getStringResponse()),
+            error -> System.err.println(error.getMessage())
+        );
     }
 
-    public JsonArrayResponse requestGeofenceData() {
-        return request("geofence-data").getJsonArrayResponse();
+    public void requestGeofenceData(Consumer<JsonArrayResponse> onResponse) {
+        JsonArrayResponse response = request("geofence-data").getJsonArrayResponse();
+        onResponse.accept(response);
     }
 }

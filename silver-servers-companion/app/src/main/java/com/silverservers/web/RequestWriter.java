@@ -1,13 +1,11 @@
 package com.silverservers.web;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 class RequestWriter<T> extends Thread {
@@ -15,17 +13,26 @@ class RequestWriter<T> extends Thread {
     private final Supplier<OutputStream> getOutputStream;
     private final BiConsumer<OutputStream, T> writeStream;
     private final Runnable onComplete;
+    private final Consumer<Exception> onError;
 
-    RequestWriter(T data, Supplier<OutputStream> getOutputStream, BiConsumer<OutputStream, T> writeStream, Runnable onComplete) {
+    RequestWriter(T data, Supplier<OutputStream> getOutputStream, BiConsumer<OutputStream, T> writeStream, Runnable onComplete, Consumer<Exception> onError) {
         this.data = data;
         this.getOutputStream = getOutputStream;
         this.writeStream = writeStream;
         this.onComplete = onComplete;
+        this.onError = onError;
     }
 
     @Override
     public void run() {
-        OutputStream stream = new BufferedOutputStream(getOutputStream.get());
+        OutputStream stream;
+        try {
+            stream = new BufferedOutputStream(getOutputStream.get());
+        } catch (UncheckedIOException exception) {
+            onError.accept(exception);
+            return;
+        }
+
         writeStream.accept(stream, data);
         onComplete.run();
 

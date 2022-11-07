@@ -121,7 +121,7 @@ location {json}
 ```
 
 #### Responses
-200 OK {json}
+200 OK {string}
 
 Message indicating server successfully received location
 
@@ -154,7 +154,7 @@ geofence_id {string}
 Id of the geofence that is entered
 
 #### Responses
-200 OK {json}
+200 OK {string}
 
 Message indicating server successfully registered user in geofence
 
@@ -187,7 +187,7 @@ geofence_id {string}
 Id of the geofence that is entered
 
 #### Responses
-200 OK {json}
+200 OK {string}
 
 Message indicating server successfully unregistered user in geofence
 
