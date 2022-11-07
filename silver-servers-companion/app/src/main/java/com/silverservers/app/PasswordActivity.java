@@ -27,16 +27,16 @@ public class PasswordActivity extends AppCompatActivity {
     }
 
     public void login(View view) {
-        TextView errorMsg = findViewById(R.id.textView_pw_err);
-        EditText publicKey = findViewById(R.id.editText_pw_pubKey);
-        EditText privateKey = findViewById(R.id.editText_pw_privKey);
-        if (TextUtils.isEmpty(publicKey.getText())
-                || TextUtils.isEmpty(privateKey.getText())) {
-            errorMsg.setText("Both fields are required!");
+        TextView textViewErrorMsg = findViewById(R.id.textView_pw_err);
+        EditText editTextPublicKey = findViewById(R.id.editText_pw_pubKey);
+        EditText editTextPrivateKey = findViewById(R.id.editText_pw_privKey);
+        if (TextUtils.isEmpty(editTextPublicKey.getText())
+                || TextUtils.isEmpty(editTextPrivateKey.getText())) {
+            textViewErrorMsg.setText("Both fields are required!");
         } else {
             App.getServerApi().requestLogin(
-                publicKey.getText().toString(),
-                privateKey.getText().toString(),
+                editTextPublicKey.getText().toString(),
+                editTextPrivateKey.getText().toString(),
                 (response) -> {
                     int statusCode = 0;
                     try {
@@ -48,7 +48,7 @@ public class PasswordActivity extends AppCompatActivity {
 
                     int finalStatusCode = statusCode;
                     response.read(successBody -> {
-                        errorMsg.setText("");
+                        textViewErrorMsg.setText("");
                         try {
                             System.out.println(successBody);
                             String userId = getString(R.string.user_id_key);
@@ -74,20 +74,20 @@ public class PasswordActivity extends AppCompatActivity {
                             intent.putExtra(keepAliveKey, successBody.get(keepAliveKey).toString());
                             startActivity(intent);
                         } catch (JSONException e) {
-                            errorMsg.setText("Error encountered with JSONObject.");
+                            textViewErrorMsg.setText("Error encountered with JSONObject.");
                             System.err.println("JSON Error encountered.");
                             e.printStackTrace(System.err);
                         }
                     }, errBody -> {
                         switch (finalStatusCode) {
                             case 400:
-                                errorMsg.setText("Missing username/email and/or password.");
+                                textViewErrorMsg.setText("Missing username/email and/or password.");
                                 break;
                             case 401:
-                                errorMsg.setText("Incorrect credentials.");
+                                textViewErrorMsg.setText("Incorrect credentials.");
                                 break;
                             case 500:
-                                errorMsg.setText("Server encountered errors, try again.");
+                                textViewErrorMsg.setText("Server encountered errors, try again.");
                                 break;
                         }
                     });
