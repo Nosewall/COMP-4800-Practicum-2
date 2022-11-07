@@ -36,6 +36,7 @@ public class PasswordActivity extends AppCompatActivity {
                                 System.out.println(body);
                                 Intent intent = new Intent(this, DashboardActivity.class);
                                 intent.putExtra("userId", body.get("user_id").toString());
+                                intent.putExtra("username", body.get("user_name").toString());
                                 intent.putExtra("sessionId", body.get("session_id").toString());
                                 intent.putExtra("keepAliveKey", body.get("keep_alive_key").toString());
                                 startActivity(intent);
