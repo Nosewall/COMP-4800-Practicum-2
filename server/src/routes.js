@@ -49,6 +49,9 @@ async function api(req, res) {
   res.send(html);
 }
 
+/**
+ * Authenticates user login, starts new session on success.
+ */
 function login(req, res, server) {
   console.log(login);
   if (!req.body.public_key || !req.body.private_key) {
@@ -75,7 +78,7 @@ function login(req, res, server) {
     });
   }
 }
-[].forEach
+
 /**
  * Gets geofence point data.
  */
