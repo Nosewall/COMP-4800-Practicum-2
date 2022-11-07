@@ -86,14 +86,6 @@ public class LocationService extends Service {
             location.getLatitude(),
             location.getLongitude(),
             (response) -> {
-                int statusCode;
-                try {
-                    statusCode = response.getStatusCode();
-                    System.out.println("Status code: " + statusCode);
-                } catch (IOException exception) {
-                    exception.printStackTrace(System.err);
-                }
-
                 response.read(
                     System.out::println,
                     System.err::println
