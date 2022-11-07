@@ -21,15 +21,15 @@ import java.util.List;
 public class App extends Application {
     public static final String EMULATOR_LOCALHOST = "10.0.2.2";
 
+    private static final ServerApi SERVER_API = ServerApi.useLocal();
+    private static final TestApi TEST_API = new TestApi();
+
     public static String generateId() {
         return java.util.UUID.randomUUID().toString();
     }
-
     public static ServerApi getServerApi() { return SERVER_API; }
-    public static TestApi getTestApi() { return TEST_API; }
 
-    private static final ServerApi SERVER_API = ServerApi.useLocal();
-    private static final TestApi TEST_API = new TestApi();
+    public static TestApi getTestApi() { return TEST_API; }
 
     /**
      * Launches app initialization tasks.

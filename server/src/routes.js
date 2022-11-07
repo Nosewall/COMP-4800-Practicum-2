@@ -1,7 +1,7 @@
 import { read } from './library/file.js';
 import { marked } from "marked";
 import express from "express";
-import { setActiveSessions, createNewSession } from './server.js';
+import { activeSessions, setActiveSessions, createNewSession } from './server.js';
 import users from "../private/data/users.json" assert {type: 'json'}
 
 const emailPattern = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -63,22 +63,19 @@ function login(req, res, server) {
       foundUser = users[i];
   }
 
-  if (!foundUser) {
-    res.status(404).json({msg: 'No such user found.'})
+  if (!foundUser || foundUser.password != req.body.private_key) {
+    res.status(401).json({msg: 'Incorrect credentials.'});
   } else {
-    if (foundUser.password != req.body.private_key) {
-      res.status(401).json({msg: 'Incorrect credentials.'});
-    } else {
-      let newSession = createNewSession(foundUser.userId);
-      res.json({
-        user_id: foundUser.userId,
-        session_id: newSession.sessionId,
-        keep_alive_key: newSession.keepAliveKey
-      });
-    }
+    let newSession = createNewSession(foundUser.userId);
+    res.json({
+      user_id: foundUser.userId,
+      user_name: foundUser.username,
+      session_id: newSession.sessionId,
+      keep_alive_key: newSession.keepAliveKey
+    });
   }
 }
-
+[].forEach
 /**
  * Gets geofence point data.
  */
