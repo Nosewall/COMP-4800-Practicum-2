@@ -41,9 +41,11 @@ public class ServerApi extends Api {
             e.printStackTrace(System.err);
         }
 
-        request("login").write(json, (request) -> {
-            onResponse.accept(request.getJsonObjectResponse());
-        });
+        request("login").write(
+            json,
+            request -> onResponse.accept(request.getJsonObjectResponse()),
+            error -> System.err.println(error.getMessage())
+        );
     }
 
     public void requestUpdateLocation(LocalDateTime time, double latitude, double longitude, Consumer<StringResponse> onResponse) {

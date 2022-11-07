@@ -7,4 +7,9 @@
     <string name="password_login">Password Login</string>
     <string name="username_email">Username/Email</string>
     <string name="oauth_login">OAuth Login</string>
+    <string name="dashboard_logged_in">Logged in as %s</string>
+    <string name="user_id_key">user_id</string>
+    <string name="user_name_key">user_name</string>
+    <string name="session_id_key">session_id</string>
+    <string name="keep_alive_key_key">keep_alive_key</string>
 </resources>
