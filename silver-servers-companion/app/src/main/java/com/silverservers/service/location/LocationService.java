@@ -40,7 +40,6 @@ public class LocationService extends Service {
      * Runs the service worker.
      * Registers the service as a foreground service with a base notification.
      */
-    @SuppressLint("MissingPermission")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         FusedLocationProviderClient locationClient = LocationServices.getFusedLocationProviderClient(this);

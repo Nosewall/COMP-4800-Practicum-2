@@ -8,6 +8,9 @@
     <string name="username_email">Username/Email</string>
     <string name="oauth_login">OAuth Login</string>
     <string name="dashboard_logged_in">Logged in as %s</string>
+    <string name="dashboard_service_inactive">Inactive</string>
+    <string name="dashboard_service_permissions">Invalid permissions</string>
+    <string name="dashboard_service_active">Active</string>
     <string name="user_id_key">user_id</string>
     <string name="user_name_key">user_name</string>
     <string name="session_id_key">session_id</string>
