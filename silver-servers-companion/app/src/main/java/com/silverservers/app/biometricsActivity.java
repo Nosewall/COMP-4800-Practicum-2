@@ -5,6 +5,7 @@ import static android.hardware.biometrics.BiometricManager.Authenticators.DEVICE
 
 import androidx.annotation.NonNull;
 import androidx.biometric.BiometricPrompt;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
