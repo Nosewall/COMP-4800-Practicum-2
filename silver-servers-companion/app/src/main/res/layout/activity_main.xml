@@ -40,4 +40,12 @@
         android:layout_marginTop="20dp"
         android:text="@string/oauth" />
 
+    <Button
+        android:id="@+id/button_main_biometrics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="20px"
+        android:onClick="goToBiometrics"
+        android:text="@string/main_biometrics_textView" />
+
 </LinearLayout>
