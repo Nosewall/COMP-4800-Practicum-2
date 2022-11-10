@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
     <!-- Permissions -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -34,7 +35,13 @@
             </intent-filter>
         </activity>
         <!-- Services -->
-        <service android:name="com.silverservers.service.location.LocationService"/>
-        <service android:name="com.silverservers.service.geofence.GeofenceService" />
+        <service
+            android:name="com.silverservers.service.location.LocationService"
+            android:foregroundServiceType="location"
+        />
+        <service
+            android:name="com.silverservers.service.geofence.GeofenceService"
+            android:foregroundServiceType="location"
+        />
     </application>
 </manifest>

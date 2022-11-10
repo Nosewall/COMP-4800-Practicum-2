@@ -8,6 +8,7 @@ import android.content.Intent;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
+import com.silverservers.permission.PermissionsPrompt;
 import com.silverservers.service.geofence.GeofenceService;
 import com.silverservers.service.location.LocationService;
 import com.silverservers.web.ServerApi;
@@ -20,13 +21,15 @@ public class App extends Application {
 
     private static final ServerApi SERVER_API = ServerApi.useLocal();
     private static final TestApi TEST_API = new TestApi();
+    private static final PermissionsPrompt PERMISSIONS_PROMPT = new PermissionsPrompt();
 
     public static String generateId() {
         return java.util.UUID.randomUUID().toString();
     }
-    public static ServerApi getServerApi() { return SERVER_API; }
 
+    public static ServerApi getServerApi() { return SERVER_API; }
     public static TestApi getTestApi() { return TEST_API; }
+    public static PermissionsPrompt getPermissionsPrompt() { return PERMISSIONS_PROMPT; }
 
     /**
      * Launches app initialization tasks.
@@ -34,30 +37,6 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        startLocationService();
-        startGeofenceService();
-    }
-
-    private void startLocationService() {
-        LocationService.start(this, getLocationIntent());
-    }
-
-    @SuppressLint("MissingPermission")
-    private void startGeofenceService() {
-        GeofenceService.start(this, getGeofenceIntent());
-    }
-
-    private Intent getLocationIntent() {
-        return new Intent(
-            this,
-            LocationService.class
-        );
-    }
-
-    @SuppressLint("UnspecifiedImmutableFlag")
-    private PendingIntent getGeofenceIntent() {
-        Intent intent = new Intent(this, GeofenceService.class);
-        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     /**
