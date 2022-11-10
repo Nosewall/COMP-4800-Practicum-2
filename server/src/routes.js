@@ -1,6 +1,10 @@
 import { read } from './library/file.js';
 import { marked } from "marked";
 import express from "express";
+import { activeSessions, setActiveSessions, createNewSession } from './server.js';
+import users from "../private/data/users.json" assert {type: 'json'}
+
+const emailPattern = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
 /**
  * Registers route mappings to a given app.
@@ -45,9 +49,34 @@ async function api(req, res) {
   res.send(html);
 }
 
+/**
+ * Authenticates user login, starts new session on success.
+ */
 function login(req, res, server) {
   console.log(login);
-  res.end();
+  if (!req.body.public_key || !req.body.private_key) {
+    res.status(400).json({msg: 'Missing public or private key.'});
+  }
+  
+  let foundUser = null;
+  let authType = emailPattern.test(req.body.public_key) ? 'email' : 'username';
+
+  for (let i in users) {
+    if (users[i][authType] == req.body.public_key)
+      foundUser = users[i];
+  }
+
+  if (!foundUser || foundUser.password != req.body.private_key) {
+    res.status(401).json({msg: 'Incorrect credentials.'});
+  } else {
+    let newSession = createNewSession(foundUser.userId);
+    res.json({
+      user_id: foundUser.userId,
+      user_name: foundUser.username,
+      session_id: newSession.sessionId,
+      keep_alive_key: newSession.keepAliveKey
+    });
+  }
 }
 
 /**
@@ -75,7 +104,7 @@ function geofenceEnter(req, res, server) {
 
   const { geofence_id } = req.body;
 
-  res.send(`Geofence enter: ${geofence_id}`)
+  res.send(`Geofence entered: ${geofence_id}`)
 }
 
 function geofenceExit(req, res, server) {
@@ -83,5 +112,5 @@ function geofenceExit(req, res, server) {
 
   const { geofence_id } = req.body;
 
-  res.send(`Geofence exit: ${geofence_id}`);
+  res.send(`Geofence exited: ${geofence_id}`);
 }

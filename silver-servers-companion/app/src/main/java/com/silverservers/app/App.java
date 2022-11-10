@@ -5,21 +5,23 @@ import android.app.Application;
 import android.app.PendingIntent;
 import android.content.Intent;
 
-import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
-import com.silverservers.service.location.GeofenceService;
+import com.silverservers.permission.PermissionsPrompt;
+import com.silverservers.service.geofence.GeofenceService;
 import com.silverservers.service.location.LocationService;
 import com.silverservers.web.ServerApi;
 import com.silverservers.web.TestApi;
 
 import org.json.JSONException;
 
-import java.util.List;
-
 public class App extends Application {
     public static final String EMULATOR_LOCALHOST = "10.0.2.2";
+
+    private static final ServerApi SERVER_API = ServerApi.useLocal();
+    private static final TestApi TEST_API = new TestApi();
+    private static final PermissionsPrompt PERMISSIONS_PROMPT = new PermissionsPrompt();
 
     public static String generateId() {
         return java.util.UUID.randomUUID().toString();
@@ -27,9 +29,7 @@ public class App extends Application {
 
     public static ServerApi getServerApi() { return SERVER_API; }
     public static TestApi getTestApi() { return TEST_API; }
-
-    private static final ServerApi SERVER_API = ServerApi.useLocal();
-    private static final TestApi TEST_API = new TestApi();
+    public static PermissionsPrompt getPermissionsPrompt() { return PERMISSIONS_PROMPT; }
 
     /**
      * Launches app initialization tasks.
@@ -37,44 +37,6 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-//        startLocationService();
-//        startGeofenceService();
-    }
-
-    private void startLocationService() {
-        Intent locationService = getLocationIntent();
-        startForegroundService(locationService);
-    }
-
-    @SuppressLint("MissingPermission")
-    private void startGeofenceService() {
-        GeofenceService.requestGeofences(geofences -> {
-            GeofencingClient client = LocationServices.getGeofencingClient(this);
-            GeofencingRequest request = GeofenceService.buildGeofenceRequest(geofences);
-            client.addGeofences(
-                request,
-                getGeofenceIntent()
-            ).addOnSuccessListener(success -> {
-                System.out.println("Geofencing initialized");
-                System.out.println(request.getGeofences());
-            }).addOnFailureListener(failure -> {
-                System.out.println("Geofencing error");
-                failure.printStackTrace(System.err);
-            });
-        });
-    }
-
-    private Intent getLocationIntent() {
-        return new Intent(
-            this,
-            LocationService.class
-        );
-    }
-
-    @SuppressLint("UnspecifiedImmutableFlag")
-    private PendingIntent getGeofenceIntent() {
-        Intent intent = new Intent(this, GeofenceService.class);
-        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     /**
@@ -91,6 +53,6 @@ public class App extends Application {
             } catch (JSONException exception) {
                 exception.printStackTrace(System.err);
             }
-        });
+        }, System.err::println);
     }
 }

@@ -1,0 +1,38 @@
+[
+    {
+        "userId": "1000",
+        "email": "joe@test.com",
+        "username": "Joe Test",
+        "password": "11111"
+    },
+    {
+        "userId": "1001",
+        "email": "janette@test.com",
+        "username": "Janette Test",
+        "password": "99999"
+    },
+    {
+        "userId": "2068",
+        "email": "jonathan@test.com",
+        "username": "Jonathan",
+        "password": "12345"
+    },
+    {
+        "userId": "6923",
+        "email": "bach@test.com",
+        "username": "Bach",
+        "password": "23456"
+    },
+    {
+        "userId": "8592",
+        "email": "nolan@test.com",
+        "username": "Nolan",
+        "password": "34567"
+    },
+    {
+        "userId": "7051",
+        "email": "tony@test.com",
+        "username": "Tony",
+        "password": "45678"
+    }
+]

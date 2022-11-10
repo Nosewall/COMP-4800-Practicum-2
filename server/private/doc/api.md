@@ -19,10 +19,15 @@ Secret key for secure user validation, usually password
 ```
 {
   user_id {string}: Internal user id for given credentials
+  user_name {string}: User's name
   session_id {string}: Newly generated session id
   keep_alive_key {string}: Newly generated keep alive key for session
 }
 ```
+
+400 Bad Request {string}
+
+Message indicating the request is missing either public/private key(s).
 
 401 Unauthorized {string}
 
@@ -116,7 +121,7 @@ location {json}
 ```
 
 #### Responses
-200 OK {json}
+200 OK {string}
 
 Message indicating server successfully received location
 
@@ -149,7 +154,7 @@ geofence_id {string}
 Id of the geofence that is entered
 
 #### Responses
-200 OK {json}
+200 OK {string}
 
 Message indicating server successfully registered user in geofence
 
@@ -182,7 +187,7 @@ geofence_id {string}
 Id of the geofence that is entered
 
 #### Responses
-200 OK {json}
+200 OK {string}
 
 Message indicating server successfully unregistered user in geofence
 

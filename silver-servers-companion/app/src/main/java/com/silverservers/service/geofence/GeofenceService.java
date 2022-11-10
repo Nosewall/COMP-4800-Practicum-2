@@ -1,23 +1,21 @@
-package com.silverservers.service.location;
+package com.silverservers.service.geofence;
 
+import android.annotation.SuppressLint;
 import android.app.IntentService;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
-
-import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
 
 import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingEvent;
 import com.google.android.gms.location.GeofencingRequest;
+import com.google.android.gms.location.LocationServices;
 import com.silverservers.app.App;
-import com.silverservers.companion.R;
-import com.silverservers.service.ServiceNotifier;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -39,6 +37,11 @@ public class GeofenceService extends IntentService {
         int geofenceTransition = geofencingEvent.getGeofenceTransition();
         List<Geofence> geofences = geofencingEvent.getTriggeringGeofences();
 
+        if (geofences == null) {
+            System.err.println("Error retrieving triggered geofences");
+            return;
+        }
+
         for (Geofence geofence : geofences) {
             switch (geofenceTransition) {
                 case Geofence.GEOFENCE_TRANSITION_ENTER: {
@@ -56,18 +59,14 @@ public class GeofenceService extends IntentService {
     private void onGeofenceEnter(String id) {
         App.getServerApi().requestGeofenceEnter(
             id,
-            (response) -> {
-                response.read(System.out::println);
-            }
+            (response) -> response.read(System.out::println, System.err::println)
         );
     }
 
     private void onGeofenceExit(String id) {
         App.getServerApi().requestGeofenceExit(
             id,
-            (response) -> {
-                response.read(System.out::println);
-            }
+            (response) -> response.read(System.out::println, System.err::println)
         );
     }
 
@@ -88,17 +87,17 @@ public class GeofenceService extends IntentService {
     }
 
     public static void requestGeofences(Consumer<List<Geofence>> onResponse) {
-        App.getServerApi().requestGeofenceData().read(json -> {
+        App.getServerApi().requestGeofenceData(response -> response.read(json -> {
             List<Geofence> geofences = new ArrayList<>();
             for (int i = 0; i < json.length(); i++) {
-                JSONObject point;
+                JSONObject geofencePoint;
                 try {
-                    point = json.getJSONObject(i);
+                    geofencePoint = json.getJSONObject(i);
                     Geofence geofence = buildGeofence(
-                        point.getString("id"),
-                        point.getDouble("latitude"),
-                        point.getDouble("longitude"),
-                        (float)point.getDouble("radius")
+                        geofencePoint.getString("id"),
+                        geofencePoint.getDouble("latitude"),
+                        geofencePoint.getDouble("longitude"),
+                        (float)geofencePoint.getDouble("radius")
                     );
                     geofences.add(geofence);
                 } catch (JSONException exception) {
@@ -106,6 +105,24 @@ public class GeofenceService extends IntentService {
                 }
             }
             onResponse.accept(geofences);
+        }, System.err::println));
+    }
+
+    @SuppressLint("MissingPermission")
+    public static void start(Context context, PendingIntent intent) {
+        GeofenceService.requestGeofences(geofences -> {
+            GeofencingClient client = LocationServices.getGeofencingClient(context);
+            GeofencingRequest request = GeofenceService.buildGeofenceRequest(geofences);
+            client.addGeofences(
+                request,
+                intent
+            ).addOnSuccessListener(success -> {
+                System.out.println("Geofencing initialized");
+                System.out.println(request.getGeofences());
+            }).addOnFailureListener(failure -> {
+                System.out.println("Geofencing error");
+                failure.printStackTrace(System.err);
+            });
         });
     }
 }
