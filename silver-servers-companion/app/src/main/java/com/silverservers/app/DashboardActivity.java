@@ -6,9 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.silverservers.authentication.Session;
 import com.silverservers.companion.R;
 
 public class DashboardActivity extends AppCompatActivity {
+
+    public static final String KEY_SESSION = App.generateId();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,12 +19,9 @@ public class DashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard);
 
         Intent intent = getIntent();
-        String userId = intent.getStringExtra(getString(R.string.user_id_key));
-        String userName = intent.getStringExtra(getString(R.string.user_name_key));
-        String sessionId = intent.getStringExtra(getString(R.string.session_id_key));
-        String keepAliveKey = intent.getStringExtra(getString(R.string.keep_alive_key_key));
+        Session session = (Session)intent.getSerializableExtra(KEY_SESSION);
 
         TextView textViewLoggedIn = findViewById(R.id.textView_dash_loggedIn);
-        textViewLoggedIn.setText(String.format(getString(R.string.dashboard_logged_in), userName));
+        textViewLoggedIn.setText(String.format(getString(R.string.dashboard_logged_in), session.userName));
     }
 }

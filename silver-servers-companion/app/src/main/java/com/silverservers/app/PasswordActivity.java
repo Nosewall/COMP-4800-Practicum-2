@@ -1,8 +1,8 @@
 package com.silverservers.app;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -11,10 +11,10 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.silverservers.authentication.Session;
 import com.silverservers.companion.R;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -26,6 +26,7 @@ public class PasswordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_password);
     }
 
+    @SuppressLint("SetTextI18n")
     public void login(View view) {
         TextView textViewErrorMsg = findViewById(R.id.textView_pw_err);
         EditText editTextPublicKey = findViewById(R.id.editText_pw_pubKey);
@@ -50,28 +51,13 @@ public class PasswordActivity extends AppCompatActivity {
                     response.read(successBody -> {
                         textViewErrorMsg.setText("");
                         try {
-                            System.out.println(successBody);
-                            String userId = getString(R.string.user_id_key);
-                            String userName = getString(R.string.user_name_key);
-                            String sessionId = getString(R.string.session_id_key);
-                            String keepAliveKey = getString(R.string.keep_alive_key_key);
+                            Session session = Session.fromJson(successBody);
 
                             // Saves login/session info into persistent memory
-                            SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
-                            SharedPreferences.Editor prefEditor = prefs.edit();
-
-                            prefEditor.putString(userId, successBody.get(userId).toString());
-                            prefEditor.putString(userName, successBody.get(userName).toString());
-                            prefEditor.putString(sessionId, successBody.get(sessionId).toString());
-                            prefEditor.putString(keepAliveKey, successBody.get(keepAliveKey).toString());
-
-                            prefEditor.apply();
+                            session.writePreferences(getPreferences(Context.MODE_PRIVATE));
 
                             Intent intent = new Intent(this, DashboardActivity.class);
-                            intent.putExtra(userId, successBody.get(userId).toString());
-                            intent.putExtra(userName, successBody.get(userName).toString());
-                            intent.putExtra(sessionId, successBody.get(sessionId).toString());
-                            intent.putExtra(keepAliveKey, successBody.get(keepAliveKey).toString());
+                            intent.putExtra(DashboardActivity.KEY_SESSION, session);
                             startActivity(intent);
                         } catch (JSONException e) {
                             textViewErrorMsg.setText("Error encountered with JSONObject.");
