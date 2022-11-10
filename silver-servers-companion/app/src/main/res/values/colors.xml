@@ -4,5 +4,6 @@
     <color name="background">#0F2542</color>
     <color name="primary">#119A49</color>
     <color name="secondary">#18375F</color>
-
+    <color name="warning">#EED202</color>
+    <color name="danger">#BB2124</color>
 </resources>
