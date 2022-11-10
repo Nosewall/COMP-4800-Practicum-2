@@ -19,4 +19,5 @@
     <string name="textview_biometric_prompt">Tap to prompt for biometrics</string>
     <string name="Biometrics" />
     <string name="main_biometrics_textView">Biometrics</string>
+    <string name="String_Oauth_Button">Try Oauth</string>
 </resources>

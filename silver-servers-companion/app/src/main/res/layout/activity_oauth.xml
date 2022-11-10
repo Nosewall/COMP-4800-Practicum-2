@@ -16,4 +16,11 @@
         android:text="@string/oauth_login"
         android:textColor="@color/foreground"
         android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/OAuth_Button"
+        android:layout_width="179dp"
+        android:layout_height="wrap_content"
+        android:onClick="tryOAuth"
+        android:text="@string/String_Oauth_Button" />
 </LinearLayout>
