@@ -45,7 +45,7 @@ public class biometricsActivity extends AppCompatActivity {
                 textView.setText("Authentication failed for some reason");
             }
 
-            @Override
+            @Override //TODO SOMETHING ON SUCCESS
             public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
                 textView.setText("Authentication Succeeded!");
