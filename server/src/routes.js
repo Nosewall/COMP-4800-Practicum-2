@@ -21,6 +21,7 @@ export default function register(app, server) {
   get("/api", api);
   get("/geofence-data", geofenceData);
   post("/login", login);
+
   post("/extend-session", extendSession);
   post("/update-location", updateLocation);
   post("/geofence-enter", geofenceEnter);
@@ -62,11 +63,11 @@ function login(req, res, server) {
   let authType = emailPattern.test(req.body.public_key) ? 'email' : 'username';
 
   for (let i in users) {
-    if (users[i][authType] == req.body.public_key)
+    if (users[i][authType] === req.body.public_key)
       foundUser = users[i];
   }
 
-  if (!foundUser || foundUser.password != req.body.private_key) {
+  if (!foundUser || foundUser.password !== req.body.private_key) {
     res.status(401).json({msg: 'Incorrect credentials.'});
   } else {
     let newSession = createNewSession(foundUser.userId);
@@ -95,6 +96,8 @@ function updateLocation(req, res, server) {
   console.log(updateLocation);
 
   const { time, latitude, longitude } = req.body;
+
+  console.log(req.headers)
 
   res.send(`Location received: ${latitude}, ${longitude}`);
 }

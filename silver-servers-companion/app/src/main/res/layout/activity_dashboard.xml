@@ -13,10 +13,10 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingTop="12sp">
+        android:paddingTop="32sp">
 
         <TextView
-            android:id="@+id/textView_dash_loggedIn"
+            android:id="@+id/textView_dash_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="25dp"
@@ -50,29 +50,13 @@
                 android:id="@+id/textView_dash_serviceStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="None"
                 android:textColor="@color/foreground"
                 android:textSize="24sp" />
         </LinearLayout>
 
         <TextView
-            android:id="@+id/textView_dash_geoStatusLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:layout_marginBottom="5dp"
-            android:text="Geofence Status"
-            android:textColor="@color/foreground"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/textView_dash_locationStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/foreground"
-            android:textSize="24sp" />
-
-        <TextView
-            android:id="@+id/textView_dash_locationStatusLabel"
+            android:id="@+id/textView_dash_locationLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
@@ -82,9 +66,28 @@
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/textView_dash_geoStatus"
+            android:id="@+id/textView_dash_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="None"
+            android:textColor="@color/foreground"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textView_dash_geoLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="5dp"
+            android:text="Active Geofences"
+            android:textColor="@color/foreground"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/textView_dash_geo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="None"
             android:textColor="@color/foreground"
             android:textSize="24sp" />
 

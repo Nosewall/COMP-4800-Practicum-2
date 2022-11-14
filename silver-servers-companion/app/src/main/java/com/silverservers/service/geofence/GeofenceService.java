@@ -3,8 +3,13 @@ package com.silverservers.service.geofence;
 import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.location.Location;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
@@ -13,6 +18,7 @@ import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.silverservers.app.App;
 import com.silverservers.authentication.Session;
+import com.silverservers.service.location.LocationService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,9 +29,14 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class GeofenceService extends IntentService {
+    public static final String KEY_BROADCAST_UPDATE = App.generateId();
+    public static final String KEY_BROADCAST_UPDATE_GEOFENCES = App.generateId();
+
     public GeofenceService() {
         super(GeofenceService.class.getName());
     }
+
+    private List<String> geofences = new ArrayList<>();
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -52,8 +63,6 @@ public class GeofenceService extends IntentService {
             return;
         }
 
-
-
         for (Geofence geofence : geofences) {
             String id = geofence.getRequestId();
 
@@ -68,9 +77,12 @@ public class GeofenceService extends IntentService {
                 }
             }
         }
+
+        broadcastUpdate();
     }
 
     private void onGeofenceEnter(Session session, String id) {
+        geofences.add(id);
         App.getServerApi().requestGeofenceEnter(
             session,
             id,
@@ -79,6 +91,7 @@ public class GeofenceService extends IntentService {
     }
 
     private void onGeofenceExit(Session session, String id) {
+        geofences.remove(id);
         App.getServerApi().requestGeofenceExit(
             session,
             id,
@@ -150,5 +163,21 @@ public class GeofenceService extends IntentService {
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE
         );
+    }
+
+    private void broadcastUpdate() {
+        Intent intent = new Intent(KEY_BROADCAST_UPDATE);
+        intent.putExtra(KEY_BROADCAST_UPDATE_GEOFENCES, geofences.toArray(new String[0]));
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    public static void listenUpdate(Context context, Consumer<String[]> onUpdate) {
+        LocalBroadcastManager.getInstance(context).registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String[] geofenceIds = intent.getStringArrayExtra(KEY_BROADCAST_UPDATE_GEOFENCES);
+                onUpdate.accept(geofenceIds);
+            }
+        }, new IntentFilter(KEY_BROADCAST_UPDATE));
     }
 }

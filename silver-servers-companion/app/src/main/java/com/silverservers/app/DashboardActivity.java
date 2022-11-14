@@ -3,6 +3,7 @@ package com.silverservers.app;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import com.silverservers.service.geofence.GeofenceService;
 import com.silverservers.service.location.LocationService;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class DashboardActivity extends AppCompatActivity {
     public static final String KEY_SESSION = App.generateId();
@@ -27,6 +29,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     private Session session;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,10 +38,24 @@ public class DashboardActivity extends AppCompatActivity {
         Intent intent = getIntent();
         session = (Session)intent.getSerializableExtra(KEY_SESSION);
 
-        TextView textViewLoggedIn = findViewById(R.id.textView_dash_loggedIn);
+        TextView textViewLoggedIn = findViewById(R.id.textView_dash_user);
         textViewLoggedIn.setText(String.format(getString(R.string.dashboard_logged_in), session.userName));
 
         setServiceStatus(ServiceStatus.INACTIVE);
+
+        LocationService.listenUpdate(this, location -> {
+            TextView textViewLocation = findViewById(R.id.textView_dash_location);
+            textViewLocation.setText(location.getLatitude() + ", " + location.getLongitude());
+        });
+
+        GeofenceService.listenUpdate(this, geofenceIds -> {
+            TextView textViewGeofences = findViewById(R.id.textView_dash_geo);
+            textViewGeofences.setText(
+                Arrays.stream(geofenceIds)
+                    .map(id -> id + "\n")
+                    .collect(Collectors.joining())
+            );
+        });
 
         PermissionsPrompt.getPermissions(this);
     }

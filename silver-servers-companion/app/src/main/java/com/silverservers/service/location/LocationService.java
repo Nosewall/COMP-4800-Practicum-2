@@ -1,13 +1,16 @@
 package com.silverservers.service.location;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -18,11 +21,15 @@ import com.silverservers.service.ServiceNotifier;
 
 import java.io.InvalidObjectException;
 import java.time.LocalDateTime;
+import java.util.function.Consumer;
 
 public class LocationService extends Service {
     private static final String NAME = "Location Service";
     private static final String DESCRIPTION = "Tracking location in background";
     private static final int ICON = R.drawable.ic_location_service;
+
+    public static final String KEY_BROADCAST_UPDATE = App.generateId();
+    public static final String KEY_BROADCAST_UPDATE_LOCATION = App.generateId();
 
     private ServiceNotifier notifier;
 
@@ -88,6 +95,8 @@ public class LocationService extends Service {
             );
         });
 
+        broadcastUpdate(location);
+
         App.getServerApi().requestUpdateLocation(
             session,
             LocalDateTime.now(),
@@ -122,5 +131,21 @@ public class LocationService extends Service {
             context,
             LocationService.class
         );
+    }
+
+    private void broadcastUpdate(Location location) {
+        Intent intent = new Intent(KEY_BROADCAST_UPDATE);
+        intent.putExtra(KEY_BROADCAST_UPDATE_LOCATION, location);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    public static void listenUpdate(Context context, Consumer<Location> onUpdate) {
+        LocalBroadcastManager.getInstance(context).registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Location location = intent.getParcelableExtra(KEY_BROADCAST_UPDATE_LOCATION);
+                onUpdate.accept(location);
+            }
+        }, new IntentFilter(KEY_BROADCAST_UPDATE));
     }
 }
