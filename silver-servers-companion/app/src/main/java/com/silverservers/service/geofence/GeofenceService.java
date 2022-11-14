@@ -6,8 +6,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
-import androidx.annotation.Nullable;
-
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingEvent;
@@ -15,7 +13,6 @@ import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.silverservers.app.App;
 import com.silverservers.authentication.Session;
-import com.silverservers.service.ServiceNotifier;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,29 +52,35 @@ public class GeofenceService extends IntentService {
             return;
         }
 
+
+
         for (Geofence geofence : geofences) {
+            String id = geofence.getRequestId();
+
             switch (geofenceTransition) {
                 case Geofence.GEOFENCE_TRANSITION_ENTER: {
-                    onGeofenceEnter(geofence.getRequestId());
+                    onGeofenceEnter(session, id);
                     break;
                 }
                 case Geofence.GEOFENCE_TRANSITION_EXIT: {
-                    onGeofenceExit(geofence.getRequestId());
+                    onGeofenceExit(session, id);
                     break;
                 }
             }
         }
     }
 
-    private void onGeofenceEnter(String id) {
+    private void onGeofenceEnter(Session session, String id) {
         App.getServerApi().requestGeofenceEnter(
+            session,
             id,
             (response) -> response.read(System.out::println, System.err::println)
         );
     }
 
-    private void onGeofenceExit(String id) {
+    private void onGeofenceExit(Session session, String id) {
         App.getServerApi().requestGeofenceExit(
+            session,
             id,
             (response) -> response.read(System.out::println, System.err::println)
         );

@@ -1,5 +1,7 @@
 package com.silverservers.web;
 
+import com.silverservers.authentication.Session;
+
 import org.json.JSONObject;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -39,7 +41,7 @@ public class Request {
         return connection;
     }
 
-    public void write(String body, Consumer<Request> onSuccess, Consumer<Exception> onError) {
+    public Request write(String body, Consumer<Request> onSuccess, Consumer<Exception> onError) {
         connection.setDoOutput(true);
         connection.setRequestProperty("content-type", "text/plain");
 
@@ -51,9 +53,11 @@ public class Request {
             onError
         );
         writer.start();
+
+        return this;
     }
 
-    public void write(JSONObject body, Consumer<Request> onSuccess, Consumer<Exception> onError) {
+    public Request write(JSONObject body, Consumer<Request> onSuccess, Consumer<Exception> onError) {
         connection.setDoOutput(true);
         connection.setRequestProperty("content-type", "application/json");
 
@@ -65,6 +69,17 @@ public class Request {
             onError
         );
         writer.start();
+
+        return this;
+    }
+
+    public Request setHeader(String key, String value) {
+        connection.setRequestProperty(key, value);
+        return this;
+    }
+
+    public Request setSecureHeaders(Session session) {
+        return setHeader("user-id", session.userId).setHeader("authorization", session.sessionId);
     }
 
     private OutputStream getOutputStream() {

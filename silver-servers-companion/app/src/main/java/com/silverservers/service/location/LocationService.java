@@ -1,6 +1,5 @@
 package com.silverservers.service.location;
 
-import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -17,7 +16,6 @@ import com.silverservers.authentication.Session;
 import com.silverservers.companion.R;
 import com.silverservers.service.ServiceNotifier;
 
-import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.time.LocalDateTime;
 
@@ -91,6 +89,7 @@ public class LocationService extends Service {
         });
 
         App.getServerApi().requestUpdateLocation(
+            session,
             LocalDateTime.now(),
             location.getLatitude(),
             location.getLongitude(),

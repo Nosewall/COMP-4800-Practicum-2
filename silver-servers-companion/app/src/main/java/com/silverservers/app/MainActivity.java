@@ -1,6 +1,5 @@
 package com.silverservers.app;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,8 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.silverservers.companion.R;
-
-import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 

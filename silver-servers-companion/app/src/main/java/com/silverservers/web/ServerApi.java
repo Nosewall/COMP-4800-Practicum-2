@@ -1,6 +1,7 @@
 package com.silverservers.web;
 
 import com.silverservers.app.App;
+import com.silverservers.authentication.Session;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,7 +49,7 @@ public class ServerApi extends Api {
         );
     }
 
-    public void requestUpdateLocation(LocalDateTime time, double latitude, double longitude, Consumer<StringResponse> onResponse) {
+    public void requestUpdateLocation(Session session, LocalDateTime time, double latitude, double longitude, Consumer<StringResponse> onResponse) {
         JSONObject json = new JSONObject();
         try {
             json.put("time", time.toString());
@@ -58,14 +59,14 @@ public class ServerApi extends Api {
             exception.printStackTrace(System.err);
         }
 
-        request("update-location").write(
+        request("update-location").setSecureHeaders(session).write(
             json,
             (request) -> onResponse.accept(request.getStringResponse()),
             error -> System.err.println(error.getMessage())
         );
     }
 
-    public void requestGeofenceEnter(String id, Consumer<StringResponse> onResponse) {
+    public void requestGeofenceEnter(Session session, String id, Consumer<StringResponse> onResponse) {
         JSONObject json = new JSONObject();
         try {
             json.put("geofence_id", id);
@@ -73,14 +74,14 @@ public class ServerApi extends Api {
             exception.printStackTrace(System.err);
         }
 
-        request("geofence-enter").write(
+        request("geofence-enter").setSecureHeaders(session).write(
             json,
             (request) -> onResponse.accept(request.getStringResponse()),
             error -> System.err.println(error.getMessage())
         );
     }
 
-    public void requestGeofenceExit(String id, Consumer<StringResponse> onResponse) {
+    public void requestGeofenceExit(Session session, String id, Consumer<StringResponse> onResponse) {
         JSONObject json = new JSONObject();
         try {
             json.put("geofence_id", id);
@@ -88,7 +89,7 @@ public class ServerApi extends Api {
             exception.printStackTrace(System.err);
         }
 
-        request("geofence-exit").write(
+        request("geofence-exit").setSecureHeaders(session).write(
             json,
             (request) -> onResponse.accept(request.getStringResponse()),
             error -> System.err.println(error.getMessage())

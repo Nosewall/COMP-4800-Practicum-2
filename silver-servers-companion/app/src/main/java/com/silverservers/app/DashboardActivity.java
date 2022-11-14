@@ -3,9 +3,6 @@ package com.silverservers.app;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
-import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -17,9 +14,7 @@ import com.silverservers.permission.PermissionsPrompt;
 import com.silverservers.service.geofence.GeofenceService;
 import com.silverservers.service.location.LocationService;
 
-import java.security.Permissions;
 import java.util.Arrays;
-import java.util.stream.Stream;
 
 public class DashboardActivity extends AppCompatActivity {
     public static final String KEY_SESSION = App.generateId();

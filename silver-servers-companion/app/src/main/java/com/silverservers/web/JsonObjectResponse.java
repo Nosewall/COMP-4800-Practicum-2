@@ -3,7 +3,6 @@ package com.silverservers.web;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 
 public class JsonObjectResponse extends JsonResponse<JSONObject> {
