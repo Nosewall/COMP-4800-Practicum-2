@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.silverservers.authentication.Session;
 import com.silverservers.companion.R;
+import com.silverservers.permission.PermissionsPrompt;
 import com.silverservers.service.geofence.GeofenceService;
 import com.silverservers.service.location.LocationService;
 
@@ -21,13 +22,13 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 public class DashboardActivity extends AppCompatActivity {
+    public static final String KEY_SESSION = App.generateId();
+
     private enum ServiceStatus {
         INACTIVE,
         PERMISSIONS,
         ACTIVE,
     }
-
-    public static final String KEY_SESSION = App.generateId();
 
     private Session session;
 
@@ -44,7 +45,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         setServiceStatus(ServiceStatus.INACTIVE);
 
-        App.getPermissionsPrompt().getPermissions(this);
+        PermissionsPrompt.getPermissions(this);
     }
 
     private void setServiceStatus(ServiceStatus status) {
@@ -93,19 +94,6 @@ public class DashboardActivity extends AppCompatActivity {
         startGeofenceService();
     }
 
-    private void startLocationService() { LocationService.start(this, getLocationIntent()); }
-    private void startGeofenceService() { GeofenceService.start(this, getGeofenceIntent()); }
-
-    private Intent getLocationIntent() {
-        return new Intent(
-            this,
-            LocationService.class
-        );
-    }
-
-    @SuppressLint("UnspecifiedImmutableFlag")
-    private PendingIntent getGeofenceIntent() {
-        Intent intent = new Intent(this, GeofenceService.class);
-        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-    }
+    private void startLocationService() { LocationService.start(this); }
+    private void startGeofenceService() { GeofenceService.start(this); }
 }

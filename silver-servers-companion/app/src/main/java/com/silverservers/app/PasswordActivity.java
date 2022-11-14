@@ -54,7 +54,7 @@ public class PasswordActivity extends AppCompatActivity {
                             Session session = Session.fromJson(successBody);
 
                             // Saves login/session info into persistent memory
-                            session.writePreferences(getPreferences(Context.MODE_PRIVATE));
+                            session.writePreferences(this);
 
                             Intent intent = new Intent(this, DashboardActivity.class);
                             intent.putExtra(DashboardActivity.KEY_SESSION, session);

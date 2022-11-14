@@ -3,11 +3,14 @@ package com.silverservers.app;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.se.omapi.SEService;
 
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
+import com.silverservers.authentication.Session;
 import com.silverservers.permission.PermissionsPrompt;
 import com.silverservers.service.geofence.GeofenceService;
 import com.silverservers.service.location.LocationService;
@@ -21,7 +24,6 @@ public class App extends Application {
 
     private static final ServerApi SERVER_API = ServerApi.useLocal();
     private static final TestApi TEST_API = new TestApi();
-    private static final PermissionsPrompt PERMISSIONS_PROMPT = new PermissionsPrompt();
 
     public static String generateId() {
         return java.util.UUID.randomUUID().toString();
@@ -29,7 +31,8 @@ public class App extends Application {
 
     public static ServerApi getServerApi() { return SERVER_API; }
     public static TestApi getTestApi() { return TEST_API; }
-    public static PermissionsPrompt getPermissionsPrompt() { return PERMISSIONS_PROMPT; }
+
+
 
     /**
      * Launches app initialization tasks.
@@ -37,6 +40,15 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Session session = new Session(
+            "jape",
+            "userId",
+            "sessionId",
+            "keepAlive"
+        );
+        session.writePreferences(this);
+        LocationService.start(this);
+        GeofenceService.start(this);
     }
 
     /**

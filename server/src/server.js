@@ -21,7 +21,7 @@ export function setActiveSessions(newSessions) { activeSessions = newSessions; }
 export function createNewSession(userId) {
   if (!userId) throw Error('Must provide userId for new session.')
   // Remove all previous sessions with same user ID
-  setActiveSessions(activeSessions.filter(session => session.userId != userId))
+  setActiveSessions(activeSessions.filter(session => session.userId !== userId))
   let sessionId = generateUniqueSessionId(activeSessions);
   let newSession = {
     sessionId: sessionId,

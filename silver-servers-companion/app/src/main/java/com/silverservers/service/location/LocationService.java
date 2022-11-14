@@ -13,10 +13,12 @@ import androidx.core.app.NotificationCompat;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.silverservers.app.App;
+import com.silverservers.authentication.Session;
 import com.silverservers.companion.R;
 import com.silverservers.service.ServiceNotifier;
 
 import java.io.IOException;
+import java.io.InvalidObjectException;
 import java.time.LocalDateTime;
 
 public class LocationService extends Service {
@@ -63,7 +65,15 @@ public class LocationService extends Service {
      */
     private void onReceiveCoordinates(Location location) {
         if (location == null) {
-            System.out.println("Could not receive new coordinates");
+            System.err.println("Error receiving new coordinates");
+            return;
+        }
+
+        Session session;
+        try {
+            session = Session.fromPreferences(this);
+        } catch (InvalidObjectException e) {
+            e.printStackTrace(System.err);
             return;
         }
 
@@ -104,7 +114,14 @@ public class LocationService extends Service {
         builder.setSilent(true);
     }
 
-    public static void start(Context context, Intent intent) {
-        context.startForegroundService(intent);
+    public static void start(Context context) {
+        context.startForegroundService(getIntent(context));
+    }
+
+    private static Intent getIntent(Context context) {
+        return new Intent(
+            context,
+            LocationService.class
+        );
     }
 }

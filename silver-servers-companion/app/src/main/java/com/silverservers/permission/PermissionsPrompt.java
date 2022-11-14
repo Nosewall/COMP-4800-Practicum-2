@@ -4,8 +4,8 @@ import android.app.Activity;
 import androidx.core.app.ActivityCompat;
 
 public class PermissionsPrompt {
-    private int currentId = -1;
-    private int getNextRequestId() {
+    private static int currentId = -1;
+    private static int getNextRequestId() {
         currentId += 1;
         return currentId;
     }
@@ -18,8 +18,7 @@ public class PermissionsPrompt {
         Manifest.permission.ACCESS_FINE_LOCATION,
     };
 
-
-    public int getPermissions(Activity context) {
+    public static int getPermissions(Activity context) {
         int id = getNextRequestId();
         ActivityCompat.requestPermissions(context, permissions, id);
         return id;
