@@ -28,69 +28,85 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView_dash_serviceStatusLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:text="Location Service:"
+                    android:textColor="@color/foreground"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/textView_dash_serviceStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="None"
+                    android:textColor="@color/foreground"
+                    android:textSize="24sp" />
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/textView_dash_serviceStatusLabel"
+                android:id="@+id/textView_dash_locationLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:text="Location Service:"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="5dp"
+                android:text="Last Updated Location"
                 android:textColor="@color/foreground"
-                android:textSize="24sp" />
+                android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/textView_dash_serviceStatus"
+                android:id="@+id/textView_dash_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="None"
                 android:textColor="@color/foreground"
                 android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/textView_dash_geoLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="5dp"
+                android:text="Active Geofences"
+                android:textColor="@color/foreground"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/textView_dash_geo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="None"
+                android:textColor="@color/foreground"
+                android:textSize="24sp" />
+
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/textView_dash_locationLabel"
-            android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/button_dash_logout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:layout_marginBottom="5dp"
-            android:text="Last Updated Location"
-            android:textColor="@color/foreground"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/textView_dash_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="None"
-            android:textColor="@color/foreground"
-            android:textSize="24sp" />
-
-        <TextView
-            android:id="@+id/textView_dash_geoLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:layout_marginBottom="5dp"
-            android:text="Active Geofences"
-            android:textColor="@color/foreground"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/textView_dash_geo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="None"
-            android:textColor="@color/foreground"
-            android:textSize="24sp" />
-
+            android:layout_margin="16sp"
+            android:backgroundTint="@color/grey"
+            android:onClick="logout"
+            android:text="@string/log_out" />
     </LinearLayout>
 
 </LinearLayout>

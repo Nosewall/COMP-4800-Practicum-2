@@ -38,17 +38,19 @@ public class PasswordActivity extends AppCompatActivity {
                 editTextPublicKey.getText().toString(),
                 editTextPrivateKey.getText().toString(),
                 (response) -> {
-                    int statusCode = 0;
+                    textViewErrorMsg.setText("");
+
+                    int statusCode;
                     try {
                         statusCode = response.getStatusCode();
-                        System.out.println("Status code: " + statusCode);
                     } catch (IOException e) {
+                        textViewErrorMsg.setText("Request could not receive status code");
                         e.printStackTrace(System.err);
+                        return;
                     }
 
                     int finalStatusCode = statusCode;
                     response.read(successBody -> {
-                        textViewErrorMsg.setText("");
                         try {
                             Session session = Session.fromJson(successBody);
 

@@ -13,6 +13,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.silverservers.authentication.Session;
@@ -116,6 +117,10 @@ public class DashboardActivity extends AppCompatActivity {
     private void startServices() {
         locationIntent = LocationService.start(this);
         geofenceIntent = GeofenceService.start(this);
+    }
+
+    public void logout(View view) {
+        logout();
     }
 
     private void logout() {

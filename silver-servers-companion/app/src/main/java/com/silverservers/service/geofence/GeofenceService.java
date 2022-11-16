@@ -70,6 +70,7 @@ public class GeofenceService extends IntentService {
 
             switch (geofenceTransition) {
                 case Geofence.GEOFENCE_TRANSITION_ENTER: {
+                    this.geofences.add(id);
                     requestGeofenceUpdate(
                         App.getServerApi()::requestGeofenceEnter,
                         session,
@@ -78,6 +79,7 @@ public class GeofenceService extends IntentService {
                     break;
                 }
                 case Geofence.GEOFENCE_TRANSITION_EXIT: {
+                    this.geofences.remove(id);
                     requestGeofenceUpdate(
                         App.getServerApi()::requestGeofenceExit,
                         session,

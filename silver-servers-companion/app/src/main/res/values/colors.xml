@@ -6,4 +6,5 @@
     <color name="secondary">#18375F</color>
     <color name="warning">#EED202</color>
     <color name="danger">#BB2124</color>
+    <color name="grey">#777777</color>
 </resources>

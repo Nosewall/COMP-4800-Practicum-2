@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Silver Servers Companion</string>
-    <string name="log_in">Log In</string>
+    <string name="log_in">Login</string>
+    <string name="log_out">Logout</string>
     <string name="password">Password</string>
     <string name="oauth">OAuth</string>
     <string name="app_title">SilverServers Companion App</string>
