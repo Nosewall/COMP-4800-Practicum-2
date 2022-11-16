@@ -1,6 +1,16 @@
 <resources>
+
     <style name="Theme.SilverServersCompanion" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorSecondary">@color/secondary</item>
     </style>
+
+    <style name="Theme.SilverServersCompanion.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.SilverServersCompanion.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.SilverServersCompanion.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

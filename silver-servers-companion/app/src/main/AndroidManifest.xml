@@ -1,20 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <!-- Permissions -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
     <!-- Application -->
     <application
+        android:name="com.silverservers.app.App"
         android:label="@string/app_name"
         android:theme="@style/Theme.SilverServersCompanion"
-        android:name="com.silverservers.app.App"
         android:usesCleartextTraffic="true"
         tools:targetApi="32">
+        <activity
+            android:name="com.silverservers.app.biometricsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_biometrics"
+            android:theme="@style/Theme.SilverServersCompanion.NoActionBar">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name="com.silverservers.app.DashboardActivity"
             android:exported="false">
@@ -35,6 +47,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <!-- Services -->
         <service
             android:name="com.silverservers.service.location.LocationService"
