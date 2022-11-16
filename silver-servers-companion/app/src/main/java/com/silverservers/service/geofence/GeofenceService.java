@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.location.Location;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -17,16 +16,19 @@ import com.google.android.gms.location.GeofencingEvent;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.silverservers.app.App;
+import com.silverservers.app.DashboardActivity;
 import com.silverservers.authentication.Session;
-import com.silverservers.service.location.LocationService;
+import com.silverservers.web.StringResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class GeofenceService extends IntentService {
     public static final String KEY_BROADCAST_UPDATE = App.generateId();
@@ -36,7 +38,7 @@ public class GeofenceService extends IntentService {
         super(GeofenceService.class.getName());
     }
 
-    private List<String> geofences = new ArrayList<>();
+    private final List<String> geofences = new ArrayList<>();
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -68,11 +70,19 @@ public class GeofenceService extends IntentService {
 
             switch (geofenceTransition) {
                 case Geofence.GEOFENCE_TRANSITION_ENTER: {
-                    onGeofenceEnter(session, id);
+                    requestGeofenceUpdate(
+                        App.getServerApi()::requestGeofenceEnter,
+                        session,
+                        id
+                    );
                     break;
                 }
                 case Geofence.GEOFENCE_TRANSITION_EXIT: {
-                    onGeofenceExit(session, id);
+                    requestGeofenceUpdate(
+                        App.getServerApi()::requestGeofenceExit,
+                        session,
+                        id
+                    );
                     break;
                 }
             }
@@ -81,21 +91,35 @@ public class GeofenceService extends IntentService {
         broadcastUpdate();
     }
 
-    private void onGeofenceEnter(Session session, String id) {
-        geofences.add(id);
-        App.getServerApi().requestGeofenceEnter(
+    private void requestGeofenceUpdate(GeofenceRequest request, Session session, String id) {
+        request.apply(
             session,
             id,
-            (response) -> response.read(System.out::println, System.err::println)
-        );
-    }
+            (response) -> {
+                int statusCode;
+                try {
+                    statusCode = response.getStatusCode();
+                    System.out.println("Status code: " + statusCode);
+                } catch (IOException e) {
+                    e.printStackTrace(System.err);
+                    return;
+                }
 
-    private void onGeofenceExit(Session session, String id) {
-        geofences.remove(id);
-        App.getServerApi().requestGeofenceExit(
-            session,
-            id,
-            (response) -> response.read(System.out::println, System.err::println)
+                int finalStatusCode = statusCode;
+                response.read(
+                    System.out::println,
+                    error -> {
+                        if (finalStatusCode == 401) {
+                            App.broadcastAuthenticate(this);
+                        } else {
+                            System.err.println(
+                                "Error requesting geofence update: " + finalStatusCode
+                            );
+                            error.printStackTrace(System.err);
+                        }
+                    }
+                );
+            }
         );
     }
 
@@ -138,13 +162,14 @@ public class GeofenceService extends IntentService {
     }
 
     @SuppressLint("MissingPermission")
-    public static void start(Context context) {
+    public static PendingIntent start(Context context) {
+        PendingIntent intent = getIntent(context);
         GeofenceService.requestGeofences(geofences -> {
             GeofencingClient client = LocationServices.getGeofencingClient(context);
             GeofencingRequest request = GeofenceService.buildGeofenceRequest(geofences);
             client.addGeofences(
                 request,
-                GeofenceService.getIntent(context)
+                intent
             ).addOnSuccessListener(success -> {
                 System.out.println("Geofencing initialized");
                 System.out.println(request.getGeofences());
@@ -153,6 +178,11 @@ public class GeofenceService extends IntentService {
                 failure.printStackTrace(System.err);
             });
         });
+        return intent;
+    }
+
+    public static void stop(PendingIntent intent) {
+        intent.cancel();
     }
 
     private static PendingIntent getIntent(Context context) {
@@ -179,5 +209,10 @@ public class GeofenceService extends IntentService {
                 onUpdate.accept(geofenceIds);
             }
         }, new IntentFilter(KEY_BROADCAST_UPDATE));
+    }
+
+    @FunctionalInterface
+    public interface GeofenceRequest {
+        public void apply(Session session, String id, Consumer<StringResponse> response);
     }
 }

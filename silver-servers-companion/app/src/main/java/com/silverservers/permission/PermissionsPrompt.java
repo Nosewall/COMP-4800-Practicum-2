@@ -1,6 +1,10 @@
 package com.silverservers.permission;
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 
 public class PermissionsPrompt {
@@ -10,12 +14,14 @@ public class PermissionsPrompt {
         return currentId;
     }
 
+    @SuppressLint("InlinedApi")
     private static final String[] permissions = new String[] {
         Manifest.permission.FOREGROUND_SERVICE,
         Manifest.permission.INTERNET,
         Manifest.permission.ACCESS_BACKGROUND_LOCATION,
         Manifest.permission.ACCESS_COARSE_LOCATION,
         Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.POST_NOTIFICATIONS,
     };
 
     public static int getPermissions(Activity context) {

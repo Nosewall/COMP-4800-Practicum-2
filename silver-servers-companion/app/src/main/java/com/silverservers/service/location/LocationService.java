@@ -1,5 +1,7 @@
 package com.silverservers.service.location;
 
+import android.annotation.SuppressLint;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,18 +9,27 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
 import android.os.IBinder;
+import android.os.Looper;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
 import com.silverservers.app.App;
+import com.silverservers.app.PasswordActivity;
 import com.silverservers.authentication.Session;
 import com.silverservers.companion.R;
 import com.silverservers.service.ServiceNotifier;
+import com.silverservers.service.geofence.GeofenceService;
 
+import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.time.LocalDateTime;
 import java.util.function.Consumer;
@@ -28,10 +39,20 @@ public class LocationService extends Service {
     private static final String DESCRIPTION = "Tracking location in background";
     private static final int ICON = R.drawable.ic_location_service;
 
+    private static final int INTERVAL = 5000;
+
     public static final String KEY_BROADCAST_UPDATE = App.generateId();
     public static final String KEY_BROADCAST_UPDATE_LOCATION = App.generateId();
 
     private ServiceNotifier notifier;
+    private FusedLocationProviderClient client;
+
+    private final LocationCallback callback = new LocationCallback() {
+        @Override
+        public void onLocationResult(@NonNull LocationResult locationResult) {
+            onReceiveCoordinates(locationResult.getLastLocation());
+        }
+    };
 
     @Nullable
     @Override
@@ -47,12 +68,16 @@ public class LocationService extends Service {
      * Runs the service worker.
      * Registers the service as a foreground service with a base notification.
      */
+    @SuppressLint("MissingPermission")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        FusedLocationProviderClient locationClient = LocationServices.getFusedLocationProviderClient(this);
-        LocationWorker worker = new LocationWorker(locationClient, this::onReceiveCoordinates);
+        client = LocationServices.getFusedLocationProviderClient(this);
 
-        worker.run();
+        client.requestLocationUpdates(
+            buildLocationRequest(),
+            callback,
+            Looper.myLooper()
+        );
 
         notifier = new ServiceNotifier(this, NAME, DESCRIPTION);
 
@@ -62,6 +87,17 @@ public class LocationService extends Service {
         );
 
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public void onDestroy() {
+        client.removeLocationUpdates(callback);
+    }
+
+    private LocationRequest buildLocationRequest() {
+        return new LocationRequest.Builder(INTERVAL)
+            .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
+            .build();
     }
 
     /**
@@ -79,22 +115,11 @@ public class LocationService extends Service {
             session = Session.fromPreferences(this);
         } catch (InvalidObjectException e) {
             e.printStackTrace(System.err);
+            App.broadcastAuthenticate(this);
             return;
         }
 
-        String coordinateString = ""
-            + location.getLatitude()
-            + ", "
-            + location.getLongitude();
-
-        notifier.updateNotification(ServiceNotifier.FOREGROUND_NOTIFICATION_ID, builder -> {
-            setNotificationDefaults(builder);
-            builder.setContentText(
-                "Latest coordinates: "
-                + coordinateString
-            );
-        });
-
+        updateNotificationLocation(location);
         broadcastUpdate(location);
 
         App.getServerApi().requestUpdateLocation(
@@ -103,12 +128,45 @@ public class LocationService extends Service {
             location.getLatitude(),
             location.getLongitude(),
             (response) -> {
+                int statusCode;
+                try {
+                    statusCode = response.getStatusCode();
+                    System.out.println("Status code: " + statusCode);
+                } catch (IOException e) {
+                    e.printStackTrace(System.err);
+                    return;
+                }
+
+                int finalStatusCode = statusCode;
                 response.read(
                     System.out::println,
-                    System.err::println
+                    error -> {
+                        if (finalStatusCode == 401) {
+                            App.broadcastAuthenticate(this);
+                        } else {
+                            System.err.println(
+                                "Error requesting location update: " + finalStatusCode
+                            );
+                            error.printStackTrace(System.err);
+                        }
+                    }
                 );
             }
         );
+    }
+
+    private void updateNotificationLocation(Location location) {
+        String coordinateString = ""
+            + location.getLatitude()
+            + ", "
+            + location.getLongitude();
+
+        notifier.updateNotification(ServiceNotifier.FOREGROUND_NOTIFICATION_ID, builder -> {
+            setNotificationDefaults(builder);
+            builder.setContentText(
+                "Latest coordinates: " + coordinateString
+            );
+        });
     }
 
     /**
@@ -122,8 +180,14 @@ public class LocationService extends Service {
         builder.setSilent(true);
     }
 
-    public static void start(Context context) {
-        context.startForegroundService(getIntent(context));
+    public static Intent start(Context context) {
+        Intent intent = getIntent(context);
+        context.startForegroundService(intent);
+        return intent;
+    }
+
+    public static void stop(Context context, Intent intent) {
+        context.stopService(intent);
     }
 
     private static Intent getIntent(Context context) {

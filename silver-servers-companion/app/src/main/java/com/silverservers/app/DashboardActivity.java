@@ -2,10 +2,16 @@ package com.silverservers.app;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.annotation.SuppressLint;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -16,18 +22,22 @@ import com.silverservers.service.geofence.GeofenceService;
 import com.silverservers.service.location.LocationService;
 
 import java.util.Arrays;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class DashboardActivity extends AppCompatActivity {
     public static final String KEY_SESSION = App.generateId();
+    public static final String KEY_AUTHENTICATION = App.generateId();
+
+    private Session session;
+    private Intent locationIntent;
+    private PendingIntent geofenceIntent;
 
     private enum ServiceStatus {
         INACTIVE,
         PERMISSIONS,
         ACTIVE,
     }
-
-    private Session session;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -36,7 +46,7 @@ public class DashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard);
 
         Intent intent = getIntent();
-        session = (Session)intent.getSerializableExtra(KEY_SESSION);
+        session = (Session) intent.getSerializableExtra(KEY_SESSION);
 
         TextView textViewLoggedIn = findViewById(R.id.textView_dash_user);
         textViewLoggedIn.setText(String.format(getString(R.string.dashboard_logged_in), session.userName));
@@ -56,6 +66,8 @@ public class DashboardActivity extends AppCompatActivity {
                     .collect(Collectors.joining())
             );
         });
+
+        App.listenAuthenticate(this, this::logout);
 
         PermissionsPrompt.getPermissions(this);
     }
@@ -102,10 +114,18 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void startServices() {
-        startLocationService();
-        startGeofenceService();
+        locationIntent = LocationService.start(this);
+        geofenceIntent = GeofenceService.start(this);
     }
 
-    private void startLocationService() { LocationService.start(this); }
-    private void startGeofenceService() { GeofenceService.start(this); }
+    private void logout() {
+        LocationService.stop(this, locationIntent);
+        if (geofenceIntent != null) {
+            GeofenceService.stop(geofenceIntent);
+        }
+
+        session.clearPreferences(this);
+        Intent mainIntent = new Intent(this, MainActivity.class);
+        startActivity(mainIntent);
+    }
 }

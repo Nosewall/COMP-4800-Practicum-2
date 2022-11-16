@@ -1,6 +1,12 @@
 package com.silverservers.app;
 
 import android.app.Application;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.silverservers.web.ServerApi;
 import com.silverservers.web.TestApi;
@@ -25,6 +31,20 @@ public class App extends Application {
      */
     @Override
     public void onCreate() { super.onCreate(); }
+
+    public static void broadcastAuthenticate(Context context) {
+        Intent intent = new Intent(DashboardActivity.KEY_AUTHENTICATION);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+    }
+
+    public static void listenAuthenticate(Context context, Runnable onAuthenticate) {
+        LocalBroadcastManager.getInstance(context).registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                onAuthenticate.run();
+            }
+        }, new IntentFilter(DashboardActivity.KEY_AUTHENTICATION));
+    }
 
     /**
      * An example of how we can use the api interfaces

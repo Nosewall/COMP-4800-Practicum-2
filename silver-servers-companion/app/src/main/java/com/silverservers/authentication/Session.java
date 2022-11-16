@@ -40,6 +40,16 @@ public class Session implements Serializable {
         preferences.apply();
     }
 
+    public void clearPreferences(Context context) {
+        SharedPreferences.Editor preferences = getPreferences(context).edit();
+        preferences.clear();
+        preferences.apply();
+    }
+
+    private static SharedPreferences getPreferences(Context context) {
+        return context.getSharedPreferences(PREFERENCES_FILE, MODE_PRIVATE);
+    }
+
     public static Session fromJson(JSONObject json) throws JSONException {
         return new Session(
             json.getString(KEY_USER_NAME),
@@ -47,10 +57,6 @@ public class Session implements Serializable {
             json.getString(KEY_SESSION_ID),
             json.getString(KEY_KEEP_ALIVE_KEY)
         );
-    }
-
-    private static SharedPreferences getPreferences(Context context) {
-        return context.getSharedPreferences(PREFERENCES_FILE, MODE_PRIVATE);
     }
 
     public static Session fromPreferences(Context context) throws InvalidObjectException {
