@@ -1,8 +1,5 @@
 package com.silverservers.app;
 
-import static android.hardware.biometrics.BiometricManager.Authenticators.BIOMETRIC_STRONG;
-import static android.hardware.biometrics.BiometricManager.Authenticators.DEVICE_CREDENTIAL;
-
 import androidx.annotation.NonNull;
 import androidx.biometric.BiometricPrompt;
 
@@ -10,8 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
