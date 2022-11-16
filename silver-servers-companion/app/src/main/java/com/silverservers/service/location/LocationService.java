@@ -2,24 +2,21 @@ package com.silverservers.service.location;
 
 import android.annotation.SuppressLint;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.IBinder;
-import android.os.Looper;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.Priority;
 import com.silverservers.app.App;
 import com.silverservers.companion.R;
 import com.silverservers.service.ServiceNotifier;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 public class LocationService extends Service {
@@ -43,11 +40,10 @@ public class LocationService extends Service {
      * Runs the service worker.
      * Registers the service as a foreground service with a base notification.
      */
-    @SuppressLint("MissingPermission")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         FusedLocationProviderClient locationClient = LocationServices.getFusedLocationProviderClient(this);
-        CoordinateWorker worker = new CoordinateWorker(locationClient, this::onReceiveCoordinates);
+        LocationWorker worker = new LocationWorker(locationClient, this::onReceiveCoordinates);
 
         worker.run();
 
@@ -89,7 +85,10 @@ public class LocationService extends Service {
             location.getLatitude(),
             location.getLongitude(),
             (response) -> {
-                response.read(System.out::println);
+                response.read(
+                    System.out::println,
+                    System.err::println
+                );
             }
         );
     }
@@ -103,5 +102,9 @@ public class LocationService extends Service {
     private void setNotificationDefaults(NotificationCompat.Builder builder) {
         builder.setSmallIcon(ICON);
         builder.setSilent(true);
+    }
+
+    public static void start(Context context, Intent intent) {
+        context.startForegroundService(intent);
     }
 }

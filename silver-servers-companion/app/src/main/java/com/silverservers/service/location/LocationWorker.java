@@ -11,21 +11,16 @@ import androidx.core.app.ActivityCompat;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.Priority;
-import com.google.android.gms.tasks.CancellationTokenSource;
 
-import java.time.LocalDateTime;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-public class CoordinateWorker implements Runnable {
+public class LocationWorker implements Runnable {
     private static final int INTERVAL = 5000;
 
     private final FusedLocationProviderClient client;
     private final Consumer<Location> onUpdate;
 
-    public CoordinateWorker(FusedLocationProviderClient client, Consumer<Location> onUpdate) {
+    public LocationWorker(FusedLocationProviderClient client, Consumer<Location> onUpdate) {
         super();
         this.client = client;
         this.onUpdate = onUpdate;

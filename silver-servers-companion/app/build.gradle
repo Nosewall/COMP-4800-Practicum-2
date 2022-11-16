@@ -2,15 +2,13 @@ plugins {
     id 'com.android.application'
 }
 
-
-
 android {
     namespace 'com.silverservers.companion'
     compileSdk 33
 
     defaultConfig {
         applicationId "com.silverservers.companion"
-        minSdk 28
+        minSdk 29
         targetSdk 33
         versionCode 1
         versionName "1.0"

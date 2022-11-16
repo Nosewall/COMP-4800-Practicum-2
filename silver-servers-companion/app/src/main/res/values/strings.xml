@@ -7,13 +7,20 @@
     <string name="password_login">Password Login</string>
     <string name="username_email">Username/Email</string>
     <string name="oauth_login">OAuth Login</string>
+    <string name="dashboard_logged_in">Logged in as %s</string>
+    <string name="dashboard_service_inactive">Inactive</string>
+    <string name="dashboard_service_permissions">Invalid permissions</string>
+    <string name="dashboard_service_active">Active</string>
+    <string name="user_id_key">user_id</string>
+    <string name="user_name_key">user_name</string>
+    <string name="session_id_key">session_id</string>
+    <string name="keep_alive_key_key">keep_alive_key</string>
     <string name="title_activity_biometrics">biometrics</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="textview_biometric_prompt">Tap to prompt for biometrics</string>
