@@ -131,7 +131,6 @@ public class LocationService extends Service {
                 int statusCode;
                 try {
                     statusCode = response.getStatusCode();
-                    System.out.println("Status code: " + statusCode);
                 } catch (IOException e) {
                     e.printStackTrace(System.err);
                     return;

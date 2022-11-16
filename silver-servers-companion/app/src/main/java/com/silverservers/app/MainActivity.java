@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void goToBiometrics(View view){
-        Intent intent = new Intent(MainActivity.this, biometricsActivity.class);
+        Intent intent = new Intent(MainActivity.this, BiometricsActivity.class);
         MainActivity.this.startActivity(intent);
     }
 }

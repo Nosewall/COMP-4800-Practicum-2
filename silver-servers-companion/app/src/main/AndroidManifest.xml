@@ -19,7 +19,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="32">
         <activity
-            android:name="com.silverservers.app.biometricsActivity"
+            android:name="com.silverservers.app.BiometricsActivity"
             android:exported="false"
             android:label="@string/title_activity_biometrics"
             android:theme="@style/Theme.SilverServersCompanion.NoActionBar">

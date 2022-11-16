@@ -3,6 +3,7 @@ package com.silverservers.app;
 import androidx.annotation.NonNull;
 import androidx.biometric.BiometricPrompt;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,25 +16,25 @@ import com.silverservers.companion.R;
 
 import java.util.concurrent.Executor;
 
-public class biometricsActivity extends AppCompatActivity {
+public class BiometricsActivity extends AppCompatActivity {
 
-    private ImageView fingerprintButton;
     private TextView textView;
 
-    private Executor executor;
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
 
     @Override
+    @SuppressLint("SetTextI18n")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_biometrics);
 
-        fingerprintButton = findViewById(R.id.imageView_biometrics);
+        ImageView fingerprintButton = findViewById(R.id.imageView_biometrics);
         textView = findViewById(R.id.textview_biometrics);
 
-        executor = ContextCompat.getMainExecutor(this);
-        biometricPrompt = new BiometricPrompt(biometricsActivity.this, executor, new BiometricPrompt.AuthenticationCallback() {
+        Executor executor = ContextCompat.getMainExecutor(this);
+        biometricPrompt = new BiometricPrompt(BiometricsActivity.this, executor, new BiometricPrompt.AuthenticationCallback() {
+
             @Override
             public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
                 super.onAuthenticationError(errorCode, errString);
@@ -54,16 +55,11 @@ public class biometricsActivity extends AppCompatActivity {
         });
 
         promptInfo = new BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Biometrics Authentication for Silver Servers")
-                        .setSubtitle("Login using your fingerprint")
-                                .setNegativeButtonText("User App Password")
-                                        .build();
+            .setTitle("Biometrics Authentication for Silver Servers")
+            .setSubtitle("Login using your fingerprint")
+            .setNegativeButtonText("User App Password")
+            .build();
 
-        fingerprintButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                biometricPrompt.authenticate(promptInfo);
-            }
-        });
+        fingerprintButton.setOnClickListener(view -> biometricPrompt.authenticate(promptInfo));
     }
 }
