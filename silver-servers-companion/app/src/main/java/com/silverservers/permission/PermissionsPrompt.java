@@ -21,6 +21,7 @@ public class PermissionsPrompt {
         Manifest.permission.ACCESS_BACKGROUND_LOCATION,
         Manifest.permission.ACCESS_COARSE_LOCATION,
         Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.USE_BIOMETRIC,
         Manifest.permission.POST_NOTIFICATIONS,
     };
 
