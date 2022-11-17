@@ -2,16 +2,11 @@ package com.silverservers.app;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -23,7 +18,6 @@ import com.silverservers.service.geofence.GeofenceService;
 import com.silverservers.service.location.LocationService;
 
 import java.util.Arrays;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class DashboardActivity extends AppCompatActivity {
@@ -132,5 +126,10 @@ public class DashboardActivity extends AppCompatActivity {
         session.clearPreferences(this);
         Intent mainIntent = new Intent(this, MainActivity.class);
         startActivity(mainIntent);
+    }
+
+    public void goToBiometrics(View view) {
+        Intent intent = new Intent(this, BiometricsActivity.class);
+        startActivity(intent);
     }
 }
