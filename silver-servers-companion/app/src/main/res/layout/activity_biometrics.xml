@@ -13,22 +13,16 @@
         android:id="@+id/textview_biometrics"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-medium"
         android:text="@string/textview_biometric_prompt"
         android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/foreground"
         android:textSize="24sp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="41dp"
-        android:orientation="vertical"></LinearLayout>
 
     <ImageView
         android:id="@+id/imageView_biometrics"
-        android:layout_width="140dp"
-        android:layout_height="124dp"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:layout_margin="16sp"
         app:srcCompat="@drawable/ic_fingerprint_purple" />
 
 </LinearLayout>
