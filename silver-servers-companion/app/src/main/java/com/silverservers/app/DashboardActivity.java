@@ -27,6 +27,7 @@ public class DashboardActivity extends AppCompatActivity {
     private Session session;
     private Intent locationIntent;
     private PendingIntent geofenceIntent;
+    private Runnable biometricsLauncher;
 
     private enum ServiceStatus {
         INACTIVE,
@@ -41,7 +42,7 @@ public class DashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard);
 
         Intent intent = getIntent();
-        session = (Session) intent.getSerializableExtra(KEY_SESSION);
+        session = (Session)intent.getSerializableExtra(KEY_SESSION);
 
         TextView textViewLoggedIn = findViewById(R.id.textView_dash_user);
         textViewLoggedIn.setText(String.format(getString(R.string.dashboard_logged_in), session.userName));
@@ -61,6 +62,14 @@ public class DashboardActivity extends AppCompatActivity {
                     .collect(Collectors.joining())
             );
         });
+
+        biometricsLauncher = BiometricsActivity.getBiometricsLauncher(
+            this,
+            session,
+            () -> System.out.println("Biometrics verification success"),
+            this::logout,
+            () -> System.out.println("Biometrics verification error")
+        );
 
         App.listenAuthenticate(this, this::logout);
 
@@ -129,7 +138,6 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     public void goToBiometrics(View view) {
-        Intent intent = new Intent(this, BiometricsActivity.class);
-        startActivity(intent);
+        biometricsLauncher.run();
     }
 }
