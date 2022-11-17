@@ -4,6 +4,7 @@
     <string name="log_out">Logout</string>
     <string name="password">Password</string>
     <string name="oauth">OAuth</string>
+    <string name="biometrics">Biometric Verification</string>
     <string name="app_title">SilverServers Companion App</string>
     <string name="password_login">Password Login</string>
     <string name="username_email">Username/Email</string>
@@ -25,6 +26,5 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="textview_biometric_prompt">Tap to prompt for biometrics</string>
-    <string name="Biometrics" />
     <string name="main_biometrics_textView">Biometrics</string>
 </resources>
