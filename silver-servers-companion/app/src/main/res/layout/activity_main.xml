@@ -5,48 +5,55 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    android:gravity="center"
     android:orientation="vertical"
     tools:context="com.silverservers.app.MainActivity">
 
-    <TextView
-        android:id="@+id/textView_main_title"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/app_title"
-        android:textColor="@color/foreground"
-        android:textSize="24sp" />
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingTop="32dp">
 
-    <TextView
-        android:id="@+id/textView_main_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="@string/log_in"
-        android:textColor="@color/foreground"
-        android:textSize="34sp" />
+        <TextView
+            android:id="@+id/textView_main_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_title"
+            android:textColor="@color/foreground"
+            android:textSize="24sp" />
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/button_main_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        android:onClick="goToPwAuth"
-        android:text="@string/password" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/button_main_oauth"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/oauth" />
+        <TextView
+            android:id="@+id/textView_main_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@string/login"
+            android:textColor="@color/foreground"
+            android:textSize="34sp" />
 
-    <Button
-        android:id="@+id/button_main_biometrics"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="20px"
-        android:onClick="goToBiometrics"
-        android:text="@string/main_biometrics_textView" />
+        <Button
+            android:id="@+id/button_main_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:onClick="goToPasswordAuthentication"
+            android:text="@string/password" />
+
+        <Button
+            android:id="@+id/button_main_oauth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:onClick="goToOauthAuthentication"
+            android:text="@string/oauth" />
+    </LinearLayout>
 
 </LinearLayout>

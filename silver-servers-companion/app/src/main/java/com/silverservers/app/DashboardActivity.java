@@ -2,16 +2,11 @@ package com.silverservers.app;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -23,7 +18,6 @@ import com.silverservers.service.geofence.GeofenceService;
 import com.silverservers.service.location.LocationService;
 
 import java.util.Arrays;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class DashboardActivity extends AppCompatActivity {
@@ -33,6 +27,7 @@ public class DashboardActivity extends AppCompatActivity {
     private Session session;
     private Intent locationIntent;
     private PendingIntent geofenceIntent;
+    private Runnable biometricsLauncher;
 
     private enum ServiceStatus {
         INACTIVE,
@@ -47,7 +42,7 @@ public class DashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard);
 
         Intent intent = getIntent();
-        session = (Session) intent.getSerializableExtra(KEY_SESSION);
+        session = (Session)intent.getSerializableExtra(KEY_SESSION);
 
         TextView textViewLoggedIn = findViewById(R.id.textView_dash_user);
         textViewLoggedIn.setText(String.format(getString(R.string.dashboard_logged_in), session.userName));
@@ -67,6 +62,14 @@ public class DashboardActivity extends AppCompatActivity {
                     .collect(Collectors.joining())
             );
         });
+
+        biometricsLauncher = BiometricsActivity.getBiometricsLauncher(
+            this,
+            session,
+            () -> System.out.println("Biometrics verification success"),
+            this::logout,
+            () -> System.out.println("Biometrics verification error")
+        );
 
         App.listenAuthenticate(this, this::logout);
 
@@ -132,5 +135,9 @@ public class DashboardActivity extends AppCompatActivity {
         session.clearPreferences(this);
         Intent mainIntent = new Intent(this, MainActivity.class);
         startActivity(mainIntent);
+    }
+
+    public void goToBiometrics(View view) {
+        biometricsLauncher.run();
     }
 }

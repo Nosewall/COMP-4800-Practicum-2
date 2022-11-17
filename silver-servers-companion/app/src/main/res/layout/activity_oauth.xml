@@ -9,11 +9,28 @@
     android:orientation="vertical"
     tools:context="com.silverservers.app.OauthActivity">
 
-    <TextView
-        android:id="@+id/textView_oauth"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/oauth_login"
-        android:textColor="@color/foreground"
-        android:textSize="24sp" />
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingTop="32dp">
+
+        <TextView
+            android:id="@+id/textView_oauth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/oauth_login"
+            android:textColor="@color/foreground"
+            android:textSize="24sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"></LinearLayout>
+
 </LinearLayout>

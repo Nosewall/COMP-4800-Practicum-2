@@ -26,6 +26,8 @@ export default function register(app, server) {
   post("/update-location", updateLocation);
   post("/geofence-enter", geofenceEnter);
   post("/geofence-exit", geofenceExit);
+
+  post("/verify-biometrics", verifyBiometrics);
 }
 
 /**
@@ -114,4 +116,10 @@ function geofenceExit(req, res, server) {
   const { geofence_id } = req.body;
 
   res.send(`Geofence exited: ${geofence_id}`);
+}
+
+function verifyBiometrics(req, res, server) {
+  console.log(verifyBiometrics);
+
+  res.send(`Biometrics verified`);
 }

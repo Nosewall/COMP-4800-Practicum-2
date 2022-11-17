@@ -16,14 +16,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    public void goToPwAuth(View view) {
+    public void goToPasswordAuthentication(View view) {
         Intent intent = new Intent(this, PasswordActivity.class);
         startActivity(intent);
     }
 
-
-    public void goToBiometrics(View view){
-        Intent intent = new Intent(MainActivity.this, BiometricsActivity.class);
-        MainActivity.this.startActivity(intent);
+    public void goToOauthAuthentication(View view) {
+        Intent intent = new Intent(this, OauthActivity.class);
+        startActivity(intent);
     }
 }

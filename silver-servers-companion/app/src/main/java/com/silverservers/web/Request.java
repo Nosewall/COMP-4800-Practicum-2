@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UncheckedIOException;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.function.Consumer;
 
@@ -69,6 +70,16 @@ public class Request {
             onError
         );
         writer.start();
+
+        return this;
+    }
+
+    public Request setMethod(String method) {
+        try {
+            connection.setRequestMethod(method);
+        } catch (ProtocolException exception) {
+            exception.printStackTrace(System.err);
+        }
 
         return this;
     }

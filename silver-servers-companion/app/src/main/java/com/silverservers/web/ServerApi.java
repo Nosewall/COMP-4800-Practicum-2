@@ -49,6 +49,11 @@ public class ServerApi extends Api {
         );
     }
 
+    public void requestGeofenceData(Consumer<JsonArrayResponse> onResponse) {
+        JsonArrayResponse response = request("geofence-data").getJsonArrayResponse();
+        onResponse.accept(response);
+    }
+
     public void requestUpdateLocation(Session session, LocalDateTime time, double latitude, double longitude, Consumer<StringResponse> onResponse) {
         JSONObject json = new JSONObject();
         try {
@@ -96,8 +101,12 @@ public class ServerApi extends Api {
         );
     }
 
-    public void requestGeofenceData(Consumer<JsonArrayResponse> onResponse) {
-        JsonArrayResponse response = request("geofence-data").getJsonArrayResponse();
+    public void requestVerifyBiometrics(Session session, Consumer<StringResponse> onResponse) {
+        StringResponse response = request("verify-biometrics")
+            .setMethod("POST")
+            .setSecureHeaders(session)
+            .getStringResponse();
+
         onResponse.accept(response);
     }
 }
