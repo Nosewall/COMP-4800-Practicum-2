@@ -34,6 +34,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="net.openid.appauth.RedirectUriReceiverActivity"
+            tools:node="replace"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/> <!-- This is a proxy activity,
+                it does not actually need to be implemented. -->
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="com.example"/> <!-- Redirect URI scheme -->
+            </intent-filter>
+        </activity>
         <!-- Services -->
         <service
             android:name="com.silverservers.service.location.LocationService"
