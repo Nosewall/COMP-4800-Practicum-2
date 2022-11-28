@@ -3,13 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Permissions -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <!-- Application -->
     <application
@@ -20,38 +20,42 @@
         tools:targetApi="32">
         <activity
             android:name="com.silverservers.app.BiometricsActivity"
-            android:exported="false"
-        >
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name="com.silverservers.app.DashboardActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name="com.silverservers.app.OauthActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name="com.silverservers.app.PasswordActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name="com.silverservers.app.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="www.silverservers.com" />
             </intent-filter>
         </activity>
 
         <!-- Services -->
         <service
             android:name="com.silverservers.service.location.LocationService"
-            android:foregroundServiceType="location"
-        />
+            android:foregroundServiceType="location" />
         <service
             android:name="com.silverservers.service.geofence.GeofenceService"
-            android:foregroundServiceType="location"
-        />
+            android:foregroundServiceType="location" />
     </application>
 </manifest>
