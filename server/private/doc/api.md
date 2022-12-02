@@ -5,7 +5,7 @@
 ### POST login
 Allows a user to “login” to get elevated permissions to use secure endpoints. The user must provide a public key and private key for the server to authenticate their attempt.
 
-#### Inputs
+#### Inputs {json}
 public_key {string}
 
 Key for identifying the user account, usually username or email.
@@ -73,15 +73,19 @@ authorization {string}
 
 The session-id or o-auth token for the active user.
 
-#### Inputs
-location {json}
-```
-{
-  time {string}: Time coordinates were received
-  latitude {number}: User latitude
-  longitude {number}: User longitude
-}
-```
+#### Inputs {json}
+
+time {string} 
+
+The time coordinates were received.
+
+latitude {number}
+
+The latitude of target user.
+
+longitude {number}
+
+The longitude of target user.
 
 #### Responses
 200 OK {string}
@@ -112,7 +116,7 @@ authorization {string}
 
 The session-id or o-auth token for the active user.
 
-#### Inputs
+#### Inputs {json}
 geofence_id {string}
 
 Id of the geofence that is entered.
@@ -146,7 +150,7 @@ authorization {string}
 
 The session-id or o-auth token for the active user.
 
-#### Inputs
+#### Inputs {json}
 geofence_id {string}
 
 Id of the geofence that is exited.
